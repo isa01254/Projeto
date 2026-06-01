@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Comparar - Integridade Alimentar{% endblock %}
+
+{% block content %}
+  <h1>Comparar alimentos</h1>
+  <p class="lead">Comparação por integridade alimentar, aditivos e categoria NOVA.</p>
+
+  <form class="inline" method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <div>
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+    <button class="btn" type="submit">Comparar</button>
+    {{ form.non_field_errors }}
+  </form>
+
+  {% if resultado %}
+    <section class="grid">
+      <div class="panel">
+        <h2>{{ resultado.a.nome }}</h2>
+        <p><span class="badge {{ resultado.a.categoria_css }}">{{ resultado.a.categoria_nova }}</span></p>
+        <p>Integridade: {{ resultado.a.indice_integridade }}/100</p>
+        <p>{{ resultado.sugestao_a }}</p>
+      </div>
+      <div class="panel">
+        <h2>{{ resultado.b.nome }}</h2>
+        <p><span class="badge {{ resultado.b.categoria_css }}">{{ resultado.b.categoria_nova }}</span></p>
+        <p>Integridade: {{ resultado.b.indice_integridade }}/100</p>
+        <p>{{ resultado.sugestao_b }}</p>
+      </div>
+    </section>
+    <section class="panel" style="margin-top: 18px;">
+      <h2>Síntese</h2>
+      <p>{{ resultado.sintese }}</p>
+    </section>
+  {% endif %}
+{% endblock %}

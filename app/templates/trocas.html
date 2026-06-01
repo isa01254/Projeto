@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Trocas - Integridade Alimentar{% endblock %}
+
+{% block content %}
+  <h1>Substituição inteligente</h1>
+  <p class="lead">Sugestões de troca para reduzir ultraprocessamento e aditivos críticos.</p>
+
+  <section class="panel">
+    <h2>Sugestões cadastradas</h2>
+    <table>
+      <thead><tr><th>Ultraprocessado</th><th>Substituto</th><th>Justificativa</th></tr></thead>
+      <tbody>
+        {% for sugestao in sugestoes %}
+          <tr>
+            <td>{{ sugestao.alimento_ultraprocessado.nome }}</td>
+            <td>{{ sugestao.alimento_substituto_innatura.nome }}</td>
+            <td>{{ sugestao.justificativa }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3">Nenhuma sugestão cadastrada.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel" style="margin-top: 18px;">
+    <h2>Ultraprocessados sem troca</h2>
+    <table>
+      <thead><tr><th>Alimento</th><th>Categoria</th></tr></thead>
+      <tbody>
+        {% for alimento in ultraprocessados_sem_troca %}
+          <tr><td>{{ alimento.nome }}</td><td>{{ alimento.categoria_nova }}</td></tr>
+        {% empty %}
+          <tr><td colspan="2">Todos os ultraprocessados têm ao menos uma sugestão.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Entrar - Integridade Alimentar{% endblock %}
+
+{% block content %}
+  <h1>Entrar</h1>
+  <section class="panel" style="max-width: 460px;">
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <p>
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {{ form.username.errors }}
+      </p>
+      <p>
+        {{ form.password.label_tag }}
+        {{ form.password }}
+        {{ form.password.errors }}
+      </p>
+      <button class="btn" type="submit">Entrar</button>
+    </form>
+  </section>
+{% endblock %}

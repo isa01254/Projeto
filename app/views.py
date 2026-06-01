@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg, Count, Q
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from .forms import AditivoBuscaForm, CatalogoFiltroForm, ComparacaoForm, ItemRefeicaoForm
 from .models import (
@@ -30,7 +31,7 @@ def home(request):
         "exemplos": alimentos.order_by("categoria_nova", "nome")[:6],
         "funcionalidades_resumo": lista_funcionalidades()[:6],
     }
-    return render(request, "app/index.html", contexto)
+    return render(request, "index.html", contexto)
 
 
 def lista_funcionalidades():
@@ -61,7 +62,7 @@ def painel_funcionalidades(request):
         "alimentos": Alimento.objects.count(),
         "aditivos": AditivoAlimentar.objects.count(),
     }
-    return render(request, "app/funcionalidades.html", contexto)
+    return render(request, "funcionalidades.html", contexto)
 
 
 def dashboard(request):
@@ -79,7 +80,7 @@ def dashboard(request):
         "alto_risco": AditivoAlimentar.objects.filter(grau_risco=AditivoAlimentar.RISCO_ALTO).count(),
         "ultimas_simulacoes": SimulacaoRefeicao.objects.order_by("-data_simulacao")[:5],
     }
-    return render(request, "app/dashboard.html", contexto)
+    return render(request, "dashboard.html", contexto)
 
 
 def catalogo_alimentos(request):
@@ -94,7 +95,7 @@ def catalogo_alimentos(request):
         if categoria:
             alimentos = alimentos.filter(categoria_nova=categoria)
 
-    return render(request, "app/catalogo.html", {"form": form, "alimentos": alimentos})
+    return render(request, "catalogo.html", {"form": form, "alimentos": alimentos})
 
 
 def painel_aditivos(request):
@@ -109,12 +110,12 @@ def painel_aditivos(request):
                 | Q(funcao_tecnologica__icontains=termo)
                 | Q(impacto_fisiologico__icontains=termo)
             )
-    return render(request, "app/aditivos.html", {"form": form, "aditivos": aditivos, "termo": termo})
+    return render(request, "aditivos.html", {"form": form, "aditivos": aditivos, "termo": termo})
 
 
 def consistencias(request):
     dados = ConsistenciaFisica.objects.all()
-    return render(request, "app/consistencias.html", {"consistencias": dados})
+    return render(request, "consistencias.html", {"consistencias": dados})
 
 
 def sugestoes_troca(request):
@@ -124,14 +125,14 @@ def sugestoes_troca(request):
     )
     return render(
         request,
-        "app/trocas.html",
+        "trocas.html",
         {"sugestoes": sugestoes, "ultraprocessados_sem_troca": ultraprocessados_sem_troca},
     )
 
 
 def historico_simulacoes(request):
     simulacoes = SimulacaoRefeicao.objects.prefetch_related("itens", "itens__alimento").order_by("-data_simulacao")[:30]
-    return render(request, "app/historico.html", {"simulacoes": simulacoes})
+    return render(request, "historico.html", {"simulacoes": simulacoes})
 
 
 def texto_comparativo(alimento_a: Alimento, alimento_b: Alimento) -> str:
@@ -164,7 +165,7 @@ def comparar_alimentos(request):
             "sugestao_a": SugestaoTroca.executar_substituicao_inteligente(alimento_a),
             "sugestao_b": SugestaoTroca.executar_substituicao_inteligente(alimento_b),
         }
-    return render(request, "app/comparar.html", {"form": form, "resultado": resultado})
+    return render(request, "comparar.html", {"form": form, "resultado": resultado})
 
 
 def obter_simulacao_ativa(request) -> SimulacaoRefeicao:
@@ -225,7 +226,7 @@ def simulacao_refeicao(request):
         "energia_total": simulacao.energia_total(),
         "sugestoes": [SugestaoTroca.executar_substituicao_inteligente(item.alimento) for item in itens if item.alimento.categoria_nova == Alimento.NOVA_4],
     }
-    return render(request, "app/simulacao.html", contexto)
+    return render(request, "simulacao.html", contexto)
 
 
 @login_required
@@ -237,7 +238,7 @@ def laudo_simulacao(request):
     eta, cardio, disbiose, laudo = calcular_componentes(simulacao)
     return render(
         request,
-        "app/laudo.html",
+        "laudo.html",
         {"simulacao": simulacao, "eta": eta, "cardio": cardio, "disbiose": disbiose, "laudo": laudo},
     )
 
@@ -254,6 +255,7 @@ def exportar_relatorio(request):
 
 
 @login_required
+@require_POST
 def remover_item(request, item_id):
     item = get_object_or_404(ItemRefeicao, id=item_id, simulacao_refeicao_id=request.session.get("simulacao_id"))
     item.delete()

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Histórico - Integridade Alimentar{% endblock %}
+
+{% block content %}
+  <h1>Histórico de simulações</h1>
+  <p class="lead">Últimas simulações registradas no prato virtual.</p>
+
+  <section class="panel">
+    <table>
+      <thead><tr><th>Data</th><th>Peso total</th><th>Itens</th><th>Energia</th></tr></thead>
+      <tbody>
+        {% for simulacao in simulacoes %}
+          <tr>
+            <td>{{ simulacao.data_simulacao|date:"d/m/Y H:i" }}</td>
+            <td>{{ simulacao.peso_total_g|floatformat:0 }}g</td>
+            <td>
+              {% for item in simulacao.itens.all %}
+                {{ item.quantidade_g|floatformat:0 }}g de {{ item.alimento.nome }}{% if not forloop.last %}<br>{% endif %}
+              {% empty %}
+                Sem itens
+              {% endfor %}
+            </td>
+            <td>{{ simulacao.energia_total|floatformat:1 }} kcal</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">Nenhuma simulação registrada.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

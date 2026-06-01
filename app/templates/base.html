@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Integridade Alimentar{% endblock %}</title>
+  <style>
+    :root {
+      --bg: #f5f7f2;
+      --panel: #ffffff;
+      --ink: #1d2a22;
+      --muted: #667267;
+      --line: #dfe7dd;
+      --brand: #1f7a4c;
+      --brand-dark: #165d39;
+      --accent: #0f6f8f;
+      --danger: #b42318;
+      --warning: #9a6700;
+      --success: #157347;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      background: var(--brand);
+      color: #fff;
+      border-bottom: 4px solid #b7d7c3;
+    }
+    .nav {
+      align-items: center;
+      display: flex;
+      gap: 18px;
+      margin: 0 auto;
+      max-width: 1180px;
+      min-height: 64px;
+      padding: 0 20px;
+    }
+    .brand {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-right: 10px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav a, .nav button {
+      background: transparent;
+      border: 0;
+      color: #fff;
+      cursor: pointer;
+      font: inherit;
+      text-decoration: none;
+    }
+    .nav a:hover, .nav button:hover { text-decoration: underline; }
+    .nav form { margin-left: auto; }
+    main {
+      margin: 0 auto;
+      max-width: 1180px;
+      padding: 28px 20px 48px;
+    }
+    h1 { margin: 0 0 8px; }
+    h2 { margin-top: 0; }
+    .lead { color: var(--muted); margin-top: 0; }
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .stat {
+      color: var(--brand-dark);
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    table {
+      background: var(--panel);
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #eaf3ec; }
+    form.inline {
+      align-items: end;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-bottom: 18px;
+    }
+    input, select {
+      border: 1px solid #b9c8bd;
+      border-radius: 6px;
+      font: inherit;
+      padding: 9px 10px;
+      width: 100%;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .btn {
+        background: var(--brand);
+      border: 0;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      display: inline-block;
+      font: inherit;
+      font-weight: 700;
+      padding: 10px 14px;
+      text-decoration: none;
+    }
+    .btn.secondary { background: var(--accent); }
+    .btn.danger { background: var(--danger); }
+    .badge {
+      border-radius: 999px;
+      color: #fff;
+      display: inline-block;
+      font-size: .83rem;
+      font-weight: 700;
+      padding: 3px 9px;
+    }
+    .success { background: var(--success); }
+    .warning { background: var(--warning); }
+    .danger { background: var(--danger); }
+    .primary { background: var(--accent); }
+    .secondary { background: #5f6b63; }
+    .messages {
+      list-style: none;
+      margin: 0 0 18px;
+      padding: 0;
+    }
+    .messages li {
+      background: #fff8d9;
+      border: 1px solid #edd27c;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      padding: 10px 12px;
+    }
+    .errorlist { color: var(--danger); margin: 4px 0 0; padding-left: 20px; }
+    @media (max-width: 720px) {
+      .nav { align-items: flex-start; flex-direction: column; gap: 10px; padding: 14px 20px; }
+      .nav form { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <a class="brand" href="{% url 'home' %}">Integridade Alimentar</a>
+      <a href="{% url 'dashboard' %}">Painel</a>
+      <a href="{% url 'funcionalidades' %}">Funcionalidades</a>
+      <a href="{% url 'catalogo' %}">Catálogo</a>
+      <a href="{% url 'aditivos' %}">Aditivos</a>
+      <a href="{% url 'simulacao' %}">Simulação</a>
+      {% if request.user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit">Sair</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">Entrar</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
+

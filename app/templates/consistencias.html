@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Consistências - Integridade Alimentar{% endblock %}
+
+{% block content %}
+  <h1>Consistência física</h1>
+  <p class="lead">Textura, esforço mastigatório e ritmo provável de ingestão.</p>
+
+  <section class="panel">
+    <table>
+      <thead>
+        <tr><th>Textura</th><th>Esforço</th><th>Avaliação</th><th>Observação</th></tr>
+      </thead>
+      <tbody>
+        {% for consistencia in consistencias %}
+          <tr>
+            <td>{{ consistencia.tipo_textura }}</td>
+            <td>{{ consistencia.esforco_mastigatorio }}</td>
+            <td>{{ consistencia.avaliar_taxa_mastigacao }}</td>
+            <td>{{ consistencia.observacao }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">Nenhuma consistência cadastrada.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

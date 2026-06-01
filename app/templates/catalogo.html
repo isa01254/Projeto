@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Catálogo - Integridade Alimentar{% endblock %}
+
+{% block content %}
+  <h1>Catálogo de alimentos</h1>
+  <p class="lead">Listagem pública com filtro por alimento e classificação NOVA.</p>
+
+  <form class="inline" method="get">
+    {% for field in form %}
+      <div>
+        {{ field.label_tag }}
+        {{ field }}
+      </div>
+    {% endfor %}
+    <button class="btn" type="submit">Filtrar</button>
+  </form>
+
+  <section class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Alimento</th>
+          <th>Categoria</th>
+          <th>Energia</th>
+          <th>Consistência</th>
+          <th>Aditivos</th>
+          <th>Integridade</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for alimento in alimentos %}
+          <tr>
+            <td>{{ alimento.nome }}</td>
+            <td><span class="badge {{ alimento.categoria_css }}">{{ alimento.categoria_nova }}</span></td>
+            <td>{{ alimento.energia_kcal|floatformat:0 }} kcal / {{ alimento.porcao_g|floatformat:0 }}g</td>
+            <td>{{ alimento.consistencia|default:"Não informada" }}</td>
+            <td>{{ alimento.resumo_aditivos }}</td>
+            <td><span class="badge {{ alimento.classe_integridade_css }}">{{ alimento.indice_integridade }}/100</span></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">Nenhum alimento encontrado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

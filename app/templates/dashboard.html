@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Painel - Integridade Alimentar{% endblock %}
+
+{% block content %}
+  <h1>Painel</h1>
+  <p class="lead">Resumo dos cadastros, classificação NOVA e simulações recentes.</p>
+
+  <section class="grid">
+    <div class="panel"><span class="stat">{{ total_alimentos }}</span> alimentos</div>
+    <div class="panel"><span class="stat">{{ total_aditivos }}</span> aditivos</div>
+    <div class="panel"><span class="stat">{{ total_consistencias }}</span> consistências</div>
+    <div class="panel"><span class="stat">{{ media_integridade }}</span> média de integridade</div>
+    <div class="panel"><span class="stat">{{ alto_risco }}</span> aditivos de alto risco</div>
+  </section>
+
+  <section class="grid" style="margin-top: 18px;">
+    <div class="panel">
+      <h2>Categorias NOVA</h2>
+      <table>
+        <thead><tr><th>Categoria</th><th>Total</th></tr></thead>
+        <tbody>
+          {% for categoria in categorias %}
+            <tr><td>{{ categoria.rotulo }}</td><td>{{ categoria.total }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h2>Últimas simulações</h2>
+      <table>
+        <thead><tr><th>Data</th><th>Peso</th></tr></thead>
+        <tbody>
+          {% for simulacao in ultimas_simulacoes %}
+            <tr><td>{{ simulacao.data_simulacao|date:"d/m/Y H:i" }}</td><td>{{ simulacao.peso_total_g|floatformat:0 }}g</td></tr>
+          {% empty %}
+            <tr><td colspan="2">Sem simulações salvas.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% endblock %}

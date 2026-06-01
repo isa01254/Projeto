@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Simulação - Integridade Alimentar{% endblock %}
+
+{% block content %}
+  <h1>Prato virtual</h1>
+  <p class="lead">Simulação ativa: {{ simulacao.identificador_sessao }}</p>
+
+  <section class="panel">
+    <h2>Adicionar item</h2>
+    <form class="inline" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="acao" value="adicionar">
+      {% for field in form %}
+        <div>
+          {{ field.label_tag }}
+          {{ field }}
+          {{ field.errors }}
+        </div>
+      {% endfor %}
+      <button class="btn" type="submit">Adicionar</button>
+      {{ form.non_field_errors }}
+    </form>
+  </section>
+
+  <section class="grid" style="margin-top: 18px;">
+    <div class="panel"><span class="stat">{{ simulacao.peso_total_g|floatformat:0 }}g</span> peso total</div>
+    <div class="panel"><span class="stat">{{ energia_total|floatformat:1 }}</span> kcal estimadas</div>
+  </section>
+
+  <section class="panel" style="margin-top: 18px;">
+    <h2>Itens da refeição</h2>
+    <table>
+      <thead><tr><th>Alimento</th><th>Quantidade</th><th>Energia</th><th>NOVA</th><th></th></tr></thead>
+      <tbody>
+        {% for item in itens %}
+          <tr>
+            <td>{{ item.alimento.nome }}</td>
+            <td>{{ item.quantidade_g|floatformat:0 }}g</td>
+            <td>{{ item.energia_calculada|floatformat:1 }} kcal</td>
+            <td><span class="badge {{ item.alimento.categoria_css }}">{{ item.alimento.categoria_nova }}</span></td>
+            <td>
+              <form method="post" action="{% url 'remover_item' item.id %}">
+                {% csrf_token %}
+                <button class="btn danger" type="submit">Remover</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">Nenhum item no prato virtual.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="actions">
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="acao" value="gerar">
+        <button class="btn" type="submit">Gerar laudo</button>
+      </form>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="acao" value="limpar">
+        <button class="btn danger" type="submit">Limpar prato</button>
+      </form>
+      <a class="btn secondary" href="{% url 'historico' %}">Histórico</a>
+    </div>
+  </section>
+
+  {% if sugestoes %}
+    <section class="panel" style="margin-top: 18px;">
+      <h2>Sugestões</h2>
+      <ul>
+        {% for sugestao in sugestoes %}
+          <li>{{ sugestao }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+{% endblock %}

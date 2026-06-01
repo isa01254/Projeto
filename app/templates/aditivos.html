@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Aditivos - Integridade Alimentar{% endblock %}
+
+{% block content %}
+  <h1>Painel toxicológico de aditivos</h1>
+  <p class="lead">Mapeamento de aditivos, função tecnológica e grau de risco.</p>
+
+  <form class="inline" method="get">
+    {% for field in form %}
+      <div>
+        {{ field.label_tag }}
+        {{ field }}
+      </div>
+    {% endfor %}
+    <button class="btn" type="submit">Buscar</button>
+  </form>
+
+  <section class="panel">
+    <table>
+      <thead>
+        <tr><th>Aditivo</th><th>Função</th><th>Risco</th><th>Impacto fisiológico</th></tr>
+      </thead>
+      <tbody>
+        {% for aditivo in aditivos %}
+          <tr>
+            <td>{{ aditivo.nome_quimico }}</td>
+            <td>{{ aditivo.funcao_tecnologica }}</td>
+            <td><span class="badge {{ aditivo.classe_risco_css }}">{{ aditivo.grau_risco }}</span></td>
+            <td>{{ aditivo.impacto_fisiologico }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">Nenhum aditivo encontrado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}
