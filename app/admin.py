@@ -1,101 +1,118 @@
 from django.contrib import admin
 from .models import (
-    ConsistenciaFisica, AditivoAlimentare, Alimento, AlimentoAditivo,
-    SimulacaoRefeicoe, ItemRefeicoe, Calculo, RiscoCardiaco,
-    MarcadorDisbiose, SugestaoTroca, LaudoMetabolico, Relatorio
+    AditivoAlimentar,
+    Alimento,
+    AlimentoAditivo,
+    CalculoETA,
+    ConsistenciaFisica,
+    ItemRefeicao,
+    LaudoMetabolico,
+    MarcadorDisbiose,
+    RelatorioExportavel,
+    ScoreRiscoCardio,
+    SimulacaoRefeicao,
+    SugestaoTroca,
 )
 
-# ==========================================
-# Inlines (Para editar tabelas filhas dentro da tela do pai)
-# ==========================================
 
 class AlimentoAditivoInline(admin.TabularInline):
     model = AlimentoAditivo
     extra = 1
 
+
 class ItemRefeicaoInline(admin.TabularInline):
-    model = ItemRefeicoe
+    model = ItemRefeicao
     extra = 1
 
+
 class CalculoETAInline(admin.StackedInline):
-    model = Calculo
+    model = CalculoETA
+    extra = 0
+
 
 class ScoreRiscoCardioInline(admin.StackedInline):
-    model = RiscoCardiaco
+    model = ScoreRiscoCardio
+    extra = 0
+
 
 class MarcadorDisbioseInline(admin.StackedInline):
     model = MarcadorDisbiose
+    extra = 0
+
 
 class LaudoMetabolicoInline(admin.StackedInline):
     model = LaudoMetabolico
+    extra = 0
 
-
-# ==========================================
-# Cadastros Base (Catálogos e Referências)
-# ==========================================
 
 @admin.register(ConsistenciaFisica)
 class ConsistenciaFisicaAdmin(admin.ModelAdmin):
-    list_display = ('tipo_textura', 'esforco_mastigatorio')
-    search_fields = ('tipo_textura',)
+    list_display = ("tipo_textura", "esforco_mastigatorio")
+    search_fields = ("tipo_textura", "esforco_mastigatorio")
 
-@admin.register(AditivoAlimentare)
+
+@admin.register(AditivoAlimentar)
 class AditivoAlimentarAdmin(admin.ModelAdmin):
-    list_display = ('nome_quimico', 'funcao_tecnologica', 'grau_risco')
-    list_filter = ('grau_risco', 'funcao_tecnologica')
-    search_fields = ('nome_quimico',)
+    list_display = ("nome_quimico", "funcao_tecnologica", "grau_risco")
+    list_filter = ("grau_risco", "funcao_tecnologica")
+    search_fields = ("nome_quimico", "funcao_tecnologica", "impacto_fisiologico")
+
 
 @admin.register(Alimento)
 class AlimentoAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'categoria_nova', 'energia_kcal', 'porcao_g')
-    list_filter = ('categoria_nova',)
-    search_fields = ('nome',)
-    inlines = [AlimentoAditivoInline] # Permite adicionar aditivos diretamente na tela do Alimento
+    list_display = ("nome", "categoria_nova", "energia_kcal", "porcao_g", "indice_integridade")
+    list_filter = ("categoria_nova", "consistencia")
+    search_fields = ("nome", "observacao_metabolica")
+    inlines = [AlimentoAditivoInline]
+
 
 @admin.register(AlimentoAditivo)
 class AlimentoAditivoAdmin(admin.ModelAdmin):
-    list_display = ('alimento', 'aditivo')
-    list_filter = ('aditivo__grau_risco',)
-    search_fields = ('alimento__nome', 'aditivo__nome_quimico')
+    list_display = ("alimento", "aditivo", "observacao")
+    list_filter = ("aditivo__grau_risco", "aditivo__funcao_tecnologica")
+    search_fields = ("alimento__nome", "aditivo__nome_quimico")
+
+
+@admin.register(SimulacaoRefeicao)
+class SimulacaoRefeicaoAdmin(admin.ModelAdmin):
+    list_display = ("identificador_sessao", "data_simulacao", "peso_total_g")
+    readonly_fields = ("identificador_sessao", "data_simulacao", "peso_total_g")
+    inlines = [ItemRefeicaoInline, CalculoETAInline, ScoreRiscoCardioInline, MarcadorDisbioseInline, LaudoMetabolicoInline]
+
+
+@admin.register(ItemRefeicao)
+class ItemRefeicaoAdmin(admin.ModelAdmin):
+    list_display = ("simulacao_refeicao", "alimento", "quantidade_g")
+    search_fields = ("alimento__nome", "simulacao_refeicao__identificador_sessao")
+
 
 @admin.register(SugestaoTroca)
 class SugestaoTrocaAdmin(admin.ModelAdmin):
-    list_display = ('alimento_ultraprocessado', 'alimento_substituto_innatura')
-    search_fields = ('alimento_ultraprocessado__nome', 'alimento_substituto_innatura__nome')
+    list_display = ("alimento_ultraprocessado", "alimento_substituto_innatura")
+    search_fields = ("alimento_ultraprocessado__nome", "alimento_substituto_innatura__nome")
 
 
-# ==========================================
-# Operacional (Simulações e Laudos)
-# ==========================================
+@admin.register(CalculoETA)
+class CalculoETAAdmin(admin.ModelAdmin):
+    list_display = ("simulacao_refeicao", "eta_basal_kcal", "etapa_final_kcal", "percentual_queda")
 
-@admin.register(SimulacaoRefeicoe)
-class SimulacaoRefeicaoAdmin(admin.ModelAdmin):
-    list_display = ('identificador_sessao', 'data_simulacao', 'peso_total_g')
-    readonly_fields = ('identificador_sessao', 'peso_total_g')
-    # Adicionando os itens e resultados diretamente na tela da Simulação para facilitar a visualização
-    inlines = [
-        ItemRefeicaoInline, 
-        CalculoETAInline, 
-        ScoreRiscoCardioInline, 
-        MarcadorDisbioseInline, 
-        LaudoMetabolicoInline
-    ]
 
-@admin.register(ItemRefeicoe)
-class ItemRefeicaoAdmin(admin.ModelAdmin):
-    list_display = ('simulacao_refeicao', 'alimento', 'quantidade_g')
-    search_fields = ('alimento__nome', 'simulacao_refeicao__identificador_sessao')
+@admin.register(ScoreRiscoCardio)
+class ScoreRiscoCardioAdmin(admin.ModelAdmin):
+    list_display = ("simulacao_refeicao", "pontuacao_risco", "potencial_aterogenico")
+
+
+@admin.register(MarcadorDisbiose)
+class MarcadorDisbioseAdmin(admin.ModelAdmin):
+    list_display = ("simulacao_refeicao", "risco_permeabilidade")
+
 
 @admin.register(LaudoMetabolico)
 class LaudoMetabolicoAdmin(admin.ModelAdmin):
-    list_display = ('simulacao_refeicao', 'classe_alerta_css')
-    search_fields = ('simulacao_refeicao__identificador_sessao',)
+    list_display = ("simulacao_refeicao", "classe_alerta_css")
+    search_fields = ("texto_sintese",)
 
-@admin.register(Relatorio)
+
+@admin.register(RelatorioExportavel)
 class RelatorioExportavelAdmin(admin.ModelAdmin):
-    list_display = ('laudo_metabolico', 'formato_saida')
-
-# Registrando os modelos auxiliares isoladamente, caso precise editá-eles fora da Simulação
-admin.site.register(Calculo)
-admin.site.register(RiscoCardiaco)
-admin.site.register(MarcadorDisbiose)
+    list_display = ("laudo_metabolico", "formato_saida", "criado_em")
