@@ -30,7 +30,7 @@ class ConsistenciaFisica(models.Model):
 
 
 class AditivoAlimentar(models.Model):
-    """RF02 e RF13 - Cadastro e painel toxicológico de aditivos."""
+    """Cadastro de componentes do rótulo."""
 
     RISCO_BAIXO = "Baixo"
     RISCO_MEDIO = "Médio"
@@ -46,12 +46,12 @@ class AditivoAlimentar(models.Model):
     grau_risco = models.CharField(max_length=20, choices=RISCO_CHOICES, default=RISCO_BAIXO)
     impacto_fisiologico = models.TextField(
         blank=True,
-        default="Impacto fisiológico não descrito na base. Complete este campo com a evidência usada no projeto.",
+        default="Observação ainda não cadastrada.",
     )
 
     class Meta:
-        verbose_name = "Aditivo alimentar"
-        verbose_name_plural = "Aditivos alimentares"
+        verbose_name = "Componente do rótulo"
+        verbose_name_plural = "Componentes do rótulo"
         ordering = ["nome_quimico"]
 
     def __str__(self) -> str:
@@ -67,17 +67,17 @@ class AditivoAlimentar(models.Model):
 
 
 class Alimento(models.Model):
-    """RF01, RF12 - Cadastro, classificação NOVA e catálogo público de alimentos."""
+    """Cadastro de alimentos e leitura simplificada do perfil do produto."""
 
     NOVA_1 = "NOVA 1"
     NOVA_2 = "NOVA 2"
     NOVA_3 = "NOVA 3"
     NOVA_4 = "NOVA 4"
     NOVA_CHOICES = [
-        (NOVA_1, "NOVA 1 - In natura ou minimamente processado"),
-        (NOVA_2, "NOVA 2 - Ingrediente culinário processado"),
-        (NOVA_3, "NOVA 3 - Processado"),
-        (NOVA_4, "NOVA 4 - Ultraprocessado"),
+        (NOVA_1, "Mais natural"),
+        (NOVA_2, "Ingrediente culinário"),
+        (NOVA_3, "Preparado"),
+        (NOVA_4, "Mais industrializado"),
     ]
 
     nome = models.CharField(max_length=150, unique=True)
@@ -94,7 +94,11 @@ class Alimento(models.Model):
         ordering = ["nome"]
 
     def __str__(self) -> str:
-        return f"{self.nome} ({self.categoria_nova})"
+        return f"{self.nome} ({self.perfil_alimentar})"
+
+    @property
+    def perfil_alimentar(self) -> str:
+        return self.get_categoria_nova_display()
 
     @property
     def categoria_numero(self) -> int:
@@ -113,10 +117,10 @@ class Alimento(models.Model):
         }.get(self.categoria_nova, "secondary")
 
     def indice_integridade(self) -> int:
-        """RF complementar - Índice de Integridade por regras lógicas.
+        """Pontuação por regras simples.
 
-        Regra pedagógica: parte de 100 e desconta pontos por grau de processamento,
-        presença de aditivos críticos e consistência de baixo esforço mastigatório.
+        Regra pedagógica: parte de 100 e desconta pontos por nível de
+        industrialização, componentes de atenção e baixo esforço mastigatório.
         """
         pontuacao = 100
         pontuacao -= {self.NOVA_1: 0, self.NOVA_2: 15, self.NOVA_3: 35, self.NOVA_4: 60}.get(self.categoria_nova, 25)
@@ -144,19 +148,19 @@ class Alimento(models.Model):
 
     def resumo_aditivos(self) -> str:
         nomes = list(self.aditivos.values_list("nome_quimico", flat=True))
-        return ", ".join(nomes) if nomes else "Sem aditivos críticos cadastrados"
+        return ", ".join(nomes) if nomes else "Sem componentes de atenção cadastrados"
 
 
 class AlimentoAditivo(models.Model):
-    """RF03 - Associação de múltiplos aditivos aos alimentos."""
+    """Associação de componentes aos alimentos."""
 
     alimento = models.ForeignKey(Alimento, on_delete=models.CASCADE)
     aditivo = models.ForeignKey(AditivoAlimentar, on_delete=models.CASCADE)
     observacao = models.CharField(max_length=255, blank=True, default="")
 
     class Meta:
-        verbose_name = "Associação alimento-aditivo"
-        verbose_name_plural = "Associações alimento-aditivo"
+        verbose_name = "Associação alimento-componente"
+        verbose_name_plural = "Associações alimento-componente"
         unique_together = ("alimento", "aditivo")
         ordering = ["alimento__nome", "aditivo__nome_quimico"]
 
@@ -210,7 +214,7 @@ class ItemRefeicao(models.Model):
 
 
 class CalculoETA(models.Model):
-    """RF07 - Efeito Térmico do Alimento estimado."""
+    """Gasto estimado da refeição."""
 
     simulacao_refeicao = models.OneToOneField(SimulacaoRefeicao, on_delete=models.CASCADE, related_name="calculo_eta")
     eta_basal_kcal = models.FloatField(default=0.0)
@@ -218,8 +222,8 @@ class CalculoETA(models.Model):
     percentual_queda = models.FloatField(default=0.0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
     class Meta:
-        verbose_name = "Cálculo de ETA"
-        verbose_name_plural = "Cálculos de ETA"
+        verbose_name = "Gasto estimado"
+        verbose_name_plural = "Gastos estimados"
 
     def calcular_depreciacao_eta(self) -> "CalculoETA":
         energia_total = self.simulacao_refeicao.energia_total()
@@ -240,15 +244,15 @@ class CalculoETA(models.Model):
 
 
 class ScoreRiscoCardio(models.Model):
-    """RF08 - Score cumulativo de risco cardiovascular estimativo."""
+    """Leitura simplificada de atenção ao coração."""
 
     simulacao_refeicao = models.OneToOneField(SimulacaoRefeicao, on_delete=models.CASCADE, related_name="score_cardio")
     pontuacao_risco = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     potencial_aterogenico = models.CharField(max_length=120, default="Não calculado")
 
     class Meta:
-        verbose_name = "Score de risco cardiovascular"
-        verbose_name_plural = "Scores de risco cardiovascular"
+        verbose_name = "Atenção ao coração"
+        verbose_name_plural = "Atenções ao coração"
 
     def calcular_score_cumulativo(self) -> "ScoreRiscoCardio":
         score = 0
@@ -295,15 +299,15 @@ class ScoreRiscoCardio(models.Model):
 
 
 class MarcadorDisbiose(models.Model):
-    """RF09 - Marcadores de perturbação da microbiota."""
+    """Leitura intestinal simplificada."""
 
     simulacao_refeicao = models.OneToOneField(SimulacaoRefeicao, on_delete=models.CASCADE, related_name="marcador_disbiose")
     risco_permeabilidade = models.CharField(max_length=50, default="Baixo")
     descricao_alerta = models.TextField(blank=True, default="")
 
     class Meta:
-        verbose_name = "Marcador de disbiose"
-        verbose_name_plural = "Marcadores de disbiose"
+        verbose_name = "Atenção intestinal"
+        verbose_name_plural = "Atenções intestinais"
 
     def mapear_perturbacao_microbiota(self) -> "MarcadorDisbiose":
         encontrou_emulsionante = False
@@ -318,13 +322,13 @@ class MarcadorDisbiose(models.Model):
 
         if encontrou_emulsionante:
             self.risco_permeabilidade = "Alto"
-            self.descricao_alerta = "Presença de emulsionantes: sinalizar risco aumentado de perturbação da microbiota."
+            self.descricao_alerta = "Presença de emulsionantes: vale observar melhor a composição da refeição."
         elif encontrou_corante:
             self.risco_permeabilidade = "Moderado"
-            self.descricao_alerta = "Presença de corantes/aditivos: recomenda-se atenção à composição do prato."
+            self.descricao_alerta = "Presença de corantes ou componentes de atenção: recomenda-se observar a composição do prato."
         else:
             self.risco_permeabilidade = "Baixo"
-            self.descricao_alerta = "Sem marcadores críticos de disbiose cadastrados para os itens selecionados."
+            self.descricao_alerta = "Sem componentes de atenção cadastrados para os itens selecionados."
         self.save()
         return self
 
@@ -334,11 +338,11 @@ class MarcadorDisbiose(models.Model):
 
 
 class SugestaoTroca(models.Model):
-    """RF10 - Substituição inteligente."""
+    """Sugestões de troca."""
 
     alimento_ultraprocessado = models.ForeignKey(Alimento, on_delete=models.CASCADE, related_name="trocas_como_ruim")
     alimento_substituto_innatura = models.ForeignKey(Alimento, on_delete=models.CASCADE, related_name="trocas_como_substituto")
-    justificativa = models.TextField(blank=True, default="Troca sugerida para reduzir processamento e aditivos críticos.")
+    justificativa = models.TextField(blank=True, default="Troca sugerida para reduzir excesso de industrialização.")
 
     class Meta:
         verbose_name = "Sugestão de troca"
@@ -354,23 +358,23 @@ class SugestaoTroca(models.Model):
         if sugestao:
             return f"Troque {alimento.nome} por {sugestao.alimento_substituto_innatura.nome}. {sugestao.justificativa}"
         if alimento.categoria_nova == Alimento.NOVA_4:
-            return "Ultraprocessado identificado. Cadastre uma alternativa in natura ou minimamente processada para completar a sugestão."
+            return "Opção muito industrializada. Cadastre uma alternativa mais simples para completar a sugestão."
         return "Este alimento não exige substituição prioritária pela regra atual."
 
 
 class LaudoMetabolico(models.Model):
-    """RF11 - Laudo comparativo/educativo da simulação."""
+    """Resumo educativo da simulação."""
 
     simulacao_refeicao = models.OneToOneField(SimulacaoRefeicao, on_delete=models.CASCADE, related_name="laudo")
     texto_sintese = models.TextField(blank=True, default="")
     classe_alerta_css = models.CharField(max_length=50, default="alert-success")
 
     class Meta:
-        verbose_name = "Laudo metabólico"
-        verbose_name_plural = "Laudos metabólicos"
+        verbose_name = "Resumo da refeição"
+        verbose_name_plural = "Resumos das refeições"
 
     def __str__(self) -> str:
-        return f"Laudo - {self.simulacao_refeicao.identificador_sessao}"
+        return f"Resumo - {self.simulacao_refeicao.identificador_sessao}"
 
     def compilar_laudo_comparativo(self) -> "LaudoMetabolico":
         eta, _ = CalculoETA.objects.get_or_create(simulacao_refeicao=self.simulacao_refeicao)
@@ -390,19 +394,19 @@ class LaudoMetabolico(models.Model):
 
         alimentos = ", ".join(item.alimento.nome for item in self.simulacao_refeicao.itens.select_related("alimento"))
         self.texto_sintese = (
-            f"Simulação educativa composta por: {alimentos}. "
+            f"Refeição composta por: {alimentos}. "
             f"Peso total: {self.simulacao_refeicao.peso_total_g:.0f}g. "
-            f"ETA basal estimado: {eta.eta_basal_kcal:.2f} kcal; ETA final: {eta.etapa_final_kcal:.2f} kcal "
-            f"(queda estimada de {eta.percentual_queda:.1f}%). "
-            f"Score cardiovascular: {cardio.pontuacao_risco}/100, potencial {cardio.potencial_aterogenico}. "
-            f"Microbiota: risco {disbiose.risco_permeabilidade}. {disbiose.descricao_alerta}"
+            f"Gasto estimado inicial: {eta.eta_basal_kcal:.2f} kcal; gasto estimado final: {eta.etapa_final_kcal:.2f} kcal "
+            f"(ajuste de {eta.percentual_queda:.1f}%). "
+            f"Atenção ao coração: {cardio.pontuacao_risco}/100, nível {cardio.potencial_aterogenico}. "
+            f"Atenção intestinal: {disbiose.risco_permeabilidade}. {disbiose.descricao_alerta}"
         )
         self.save()
         return self
 
 
 class RelatorioExportavel(models.Model):
-    """RF15 - Exportação de diagnóstico metabólico em HTML imprimível."""
+    """Exportação de resumo em HTML imprimível."""
 
     laudo_metabolico = models.ForeignKey(LaudoMetabolico, on_delete=models.CASCADE, related_name="exportacoes")
     formato_saida = models.CharField(max_length=10, default="HTML")
@@ -417,31 +421,33 @@ class RelatorioExportavel(models.Model):
         laudo = self.laudo_metabolico
         simulacao = laudo.simulacao_refeicao
         itens_html = "".join(
-            f"<li>{item.quantidade_g:g}g - {item.alimento.nome} ({item.alimento.categoria_nova})</li>"
+            f"<li>{item.quantidade_g:g}g - {item.alimento.nome} ({item.alimento.perfil_alimentar})</li>"
             for item in simulacao.itens.select_related("alimento")
         )
         return f"""<!doctype html>
 <html lang='pt-br'>
 <head>
   <meta charset='utf-8'>
-  <title>Relatório metabólico</title>
+  <title>Relatório da refeição</title>
   <style>
-    body {{ font-family: Arial, sans-serif; margin: 32px; color: #152019; }}
-    .box {{ border: 1px solid #d8e2dc; border-radius: 14px; padding: 20px; }}
-    h1 {{ color: #234f32; }}
+    body {{ background: #fbf2e5; font-family: Arial, sans-serif; margin: 32px; color: #2b2018; }}
+    .box {{ background: #fffaf2; border: 1px solid #ead8c4; border-radius: 8px; padding: 20px; }}
+    h1, h2 {{ color: #7f0d22; font-family: Georgia, 'Times New Roman', serif; }}
+    button {{ background: #7f0d22; border: 0; border-radius: 6px; color: #fffaf2; cursor: pointer; font-weight: 700; padding: 10px 14px; }}
     @media print {{ button {{ display: none; }} body {{ margin: 12mm; }} }}
   </style>
 </head>
 <body>
   <button onclick="window.print()">Imprimir / salvar PDF</button>
-  <h1>Diagnóstico metabólico estruturado</h1>
+  <h1>Relatório MARELLA</h1>
+  <p><strong>Matriz de Análise de Rótulos, Elementos e Listas Alimentares</strong></p>
   <div class='box'>
     <p><strong>Sessão:</strong> {simulacao.identificador_sessao}</p>
     <p><strong>Data:</strong> {simulacao.data_simulacao:%d/%m/%Y %H:%M}</p>
     <p><strong>Peso total:</strong> {simulacao.peso_total_g:.0f}g</p>
     <h2>Itens do prato virtual</h2>
     <ul>{itens_html}</ul>
-    <h2>Síntese</h2>
+  <h2>Resumo</h2>
     <p>{laudo.texto_sintese}</p>
   </div>
 </body>

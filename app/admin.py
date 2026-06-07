@@ -14,6 +14,10 @@ from .models import (
     SugestaoTroca,
 )
 
+admin.site.site_header = "MARELLA"
+admin.site.site_title = "MARELLA"
+admin.site.index_title = "Matriz de Análise de Rótulos, Elementos e Listas Alimentares"
+
 
 class AlimentoAditivoInline(admin.TabularInline):
     model = AlimentoAditivo

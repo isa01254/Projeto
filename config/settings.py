@@ -57,10 +57,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Projeto',
-        'USER': 'postgres',
+        'NAME': 'projeto',
+        'USER': 'projeto_user',
         'PASSWORD': '123456',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
@@ -91,7 +91,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'app' / 'static']
+APP_STATIC_DIR = BASE_DIR / 'app' / 'static'
+STATICFILES_DIRS = [APP_STATIC_DIR] if APP_STATIC_DIR.exists() else []
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'

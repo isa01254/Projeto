@@ -14,20 +14,20 @@ class CatalogoFiltroForm(BootstrapFormMixin, forms.Form):
     busca = forms.CharField(
         label="Buscar alimento",
         required=False,
-        widget=forms.TextInput(attrs={"placeholder": "Nome ou observação metabólica"}),
+        widget=forms.TextInput(attrs={"placeholder": "Nome ou observação"}),
     )
     categoria_nova = forms.ChoiceField(
-        label="Categoria NOVA",
+        label="Tipo de alimento",
         required=False,
-        choices=[("", "Todas as categorias")] + list(Alimento.NOVA_CHOICES),
+        choices=[("", "Todos os tipos")] + list(Alimento.NOVA_CHOICES),
     )
 
 
 class AditivoBuscaForm(BootstrapFormMixin, forms.Form):
     termo = forms.CharField(
-        label="Buscar aditivo",
+        label="Buscar componente",
         required=False,
-        widget=forms.TextInput(attrs={"placeholder": "Nome, função ou impacto fisiológico"}),
+        widget=forms.TextInput(attrs={"placeholder": "Nome, uso ou observação"}),
     )
 
 

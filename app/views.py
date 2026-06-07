@@ -29,40 +29,8 @@ def home(request):
         "total_ultraprocessados": alimentos.filter(categoria_nova=Alimento.NOVA_4).count(),
         "total_simulacoes": SimulacaoRefeicao.objects.count(),
         "exemplos": alimentos.order_by("categoria_nova", "nome")[:6],
-        "funcionalidades_resumo": lista_funcionalidades()[:6],
     }
     return render(request, "index.html", contexto)
-
-
-def lista_funcionalidades():
-    return [
-        {"codigo": "RF01", "nome": "Classificação NOVA do alimento", "link": "catalogo", "status": "Implementado"},
-        {"codigo": "RF02", "nome": "Mapeamento de aditivos químicos", "link": "aditivos", "status": "Implementado"},
-        {"codigo": "RF03", "nome": "Associação alimento-aditivo", "link": "catalogo", "status": "Implementado"},
-        {"codigo": "RF04", "nome": "Consistência física e mastigação", "link": "consistencias", "status": "Implementado"},
-        {"codigo": "RF05", "nome": "Prato virtual/simulação", "link": "simulacao", "status": "Implementado"},
-        {"codigo": "RF06", "nome": "Itens integrados à refeição", "link": "simulacao", "status": "Implementado"},
-        {"codigo": "RF07", "nome": "Cálculo de ETA", "link": "laudo", "status": "Implementado"},
-        {"codigo": "RF08", "nome": "Score cardiovascular", "link": "laudo", "status": "Implementado"},
-        {"codigo": "RF09", "nome": "Marcador de microbiota/disbiose", "link": "laudo", "status": "Implementado"},
-        {"codigo": "RF10", "nome": "Sugestão de substituição inteligente", "link": "trocas", "status": "Implementado"},
-        {"codigo": "RF11", "nome": "Laudo clínico-nutricional", "link": "laudo", "status": "Implementado"},
-        {"codigo": "RF12", "nome": "Catálogo público de alimentos", "link": "catalogo", "status": "Implementado"},
-        {"codigo": "RF13", "nome": "Painel toxicológico de aditivos", "link": "aditivos", "status": "Implementado"},
-        {"codigo": "RF14", "nome": "Validação de simulação e formulários", "link": "simulacao", "status": "Implementado"},
-        {"codigo": "RF15", "nome": "Exportação de relatório HTML", "link": "exportar_relatorio", "status": "Implementado"},
-        {"codigo": "LOGIN", "nome": "Autenticação de usuário", "link": "login", "status": "Implementado"},
-    ]
-
-
-def painel_funcionalidades(request):
-    contexto = {
-        "funcionalidades": lista_funcionalidades(),
-        "total": len(lista_funcionalidades()),
-        "alimentos": Alimento.objects.count(),
-        "aditivos": AditivoAlimentar.objects.count(),
-    }
-    return render(request, "funcionalidades.html", contexto)
 
 
 def dashboard(request):
@@ -144,11 +112,11 @@ def texto_comparativo(alimento_a: Alimento, alimento_b: Alimento) -> str:
         melhor = alimento_b
         pior = alimento_a
     else:
-        return "Os dois alimentos ficaram com o mesmo Índice de Integridade. Compare a presença de aditivos e a consistência para uma análise qualitativa mais fina."
+        return "Os dois alimentos ficaram com a mesma pontuação. Compare os componentes do rótulo e a consistência para escolher com mais clareza."
 
     return (
-        f"{melhor.nome} apresenta maior integridade alimentar na regra do sistema. "
-        f"A diferença em relação a {pior.nome} ocorre principalmente por categoria NOVA, aditivos cadastrados e esforço mastigatório."
+        f"{melhor.nome} ficou melhor na leitura do sistema. "
+        f"A diferença em relação a {pior.nome} ocorre principalmente pelo tipo do alimento, componentes cadastrados e esforço de mastigação."
     )
 
 
@@ -212,10 +180,10 @@ def simulacao_refeicao(request):
 
     if request.method == "POST" and request.POST.get("acao") == "gerar":
         if not simulacao.possui_itens():
-            messages.error(request, "Não é possível gerar laudo com a refeição vazia.")
+            messages.error(request, "Não é possível gerar resumo com a refeição vazia.")
             return redirect("simulacao")
         calcular_componentes(simulacao)
-        messages.success(request, "Laudo metabólico gerado com sucesso.")
+        messages.success(request, "Resumo da refeição gerado com sucesso.")
         return redirect("laudo")
 
     itens = simulacao.itens.select_related("alimento", "alimento__consistencia").prefetch_related("alimento__aditivos")
@@ -233,7 +201,7 @@ def simulacao_refeicao(request):
 def laudo_simulacao(request):
     simulacao = obter_simulacao_ativa(request)
     if not simulacao.possui_itens():
-        messages.error(request, "Adicione ao menos um alimento antes de consultar o laudo.")
+        messages.error(request, "Adicione ao menos um alimento antes de consultar o resumo.")
         return redirect("simulacao")
     eta, cardio, disbiose, laudo = calcular_componentes(simulacao)
     return render(

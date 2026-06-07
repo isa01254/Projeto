@@ -7,10 +7,9 @@ from app import views
 urlpatterns = [
     path("", views.home, name="home"),
     path("admin/", admin.site.urls),
-    path("login/", auth_views.LoginView.as_view(template_name="registration/login.html"), name="login"),
+    path("login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("dashboard/", views.dashboard, name="dashboard"),
-    path("funcionalidades/", views.painel_funcionalidades, name="funcionalidades"),
     path("catalogo/", views.catalogo_alimentos, name="catalogo"),
     path("aditivos/", views.painel_aditivos, name="aditivos"),
     path("consistencias/", views.consistencias, name="consistencias"),

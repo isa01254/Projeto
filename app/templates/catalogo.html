@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Catálogo - Integridade Alimentar{% endblock %}
+{% block title %}Catálogo - MARELLA{% endblock %}
 
 {% block content %}
   <h1>Catálogo de alimentos</h1>
-  <p class="lead">Listagem pública com filtro por alimento e classificação NOVA.</p>
+  <p class="lead">Listagem com filtros simples para consultar alimentos e informações do rótulo.</p>
 
-  <form class="inline" method="get">
+  <div class="actions">
+    <a class="btn" href="{% url 'simulacao' %}">Usar na simulação</a>
+    <a class="btn secondary" href="{% url 'comparar' %}">Comparar alimentos</a>
+    <a href="{% url 'consistencias' %}">Ver consistências</a>
+  </div>
+
+  <form class="inline section-gap" method="get">
     {% for field in form %}
       <div>
         {{ field.label_tag }}
@@ -21,18 +27,18 @@
       <thead>
         <tr>
           <th>Alimento</th>
-          <th>Categoria</th>
+          <th>Tipo</th>
           <th>Energia</th>
           <th>Consistência</th>
-          <th>Aditivos</th>
-          <th>Integridade</th>
+          <th>Componentes</th>
+          <th>Pontuação</th>
         </tr>
       </thead>
       <tbody>
         {% for alimento in alimentos %}
           <tr>
             <td>{{ alimento.nome }}</td>
-            <td><span class="badge {{ alimento.categoria_css }}">{{ alimento.categoria_nova }}</span></td>
+            <td><span class="badge {{ alimento.categoria_css }}">{{ alimento.perfil_alimentar }}</span></td>
             <td>{{ alimento.energia_kcal|floatformat:0 }} kcal / {{ alimento.porcao_g|floatformat:0 }}g</td>
             <td>{{ alimento.consistencia|default:"Não informada" }}</td>
             <td>{{ alimento.resumo_aditivos }}</td>

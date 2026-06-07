@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Laudo - Integridade Alimentar{% endblock %}
+{% block title %}Resumo - MARELLA{% endblock %}
 
 {% block content %}
-  <h1>Laudo metabólico</h1>
-  <p class="lead">Síntese clínico-nutricional comparativa da simulação ativa.</p>
+  <h1>Resumo da refeição</h1>
+  <p class="lead">Leitura educativa da simulação ativa.</p>
 
   <section class="grid">
-    <div class="panel"><span class="stat">{{ eta.eta_basal_kcal|floatformat:2 }}</span> ETA basal kcal</div>
-    <div class="panel"><span class="stat">{{ eta.etapa_final_kcal|floatformat:2 }}</span> ETA final kcal</div>
-    <div class="panel"><span class="stat">{{ eta.percentual_queda|floatformat:1 }}%</span> queda estimada</div>
-    <div class="panel"><span class="stat">{{ cardio.pontuacao_risco }}/100</span> score cardiovascular</div>
-    <div class="panel"><span class="stat">{{ disbiose.risco_permeabilidade }}</span> microbiota</div>
+    <div class="panel"><span class="stat">{{ eta.eta_basal_kcal|floatformat:2 }}</span> gasto inicial kcal</div>
+    <div class="panel"><span class="stat">{{ eta.etapa_final_kcal|floatformat:2 }}</span> gasto final kcal</div>
+    <div class="panel"><span class="stat">{{ eta.percentual_queda|floatformat:1 }}%</span> ajuste estimado</div>
+    <div class="panel"><span class="stat">{{ cardio.pontuacao_risco }}/100</span> atenção ao coração</div>
+    <div class="panel"><span class="stat">{{ disbiose.risco_permeabilidade }}</span> atenção intestinal</div>
   </section>
 
-  <section class="panel" style="margin-top: 18px;">
-    <h2>Síntese</h2>
+  <section class="panel section-gap">
+    <h2>Resumo</h2>
     <p>{{ laudo.texto_sintese }}</p>
     <div class="actions">
       <a class="btn" href="{% url 'exportar_relatorio' %}">Exportar HTML</a>
@@ -23,16 +23,16 @@
     </div>
   </section>
 
-  <section class="panel" style="margin-top: 18px;">
+  <section class="panel section-gap">
     <h2>Itens avaliados</h2>
     <table>
-      <thead><tr><th>Alimento</th><th>Quantidade</th><th>Categoria</th></tr></thead>
+      <thead><tr><th>Alimento</th><th>Quantidade</th><th>Tipo</th></tr></thead>
       <tbody>
         {% for item in simulacao.itens.all %}
           <tr>
             <td>{{ item.alimento.nome }}</td>
             <td>{{ item.quantidade_g|floatformat:0 }}g</td>
-            <td>{{ item.alimento.categoria_nova }}</td>
+            <td>{{ item.alimento.perfil_alimentar }}</td>
           </tr>
         {% endfor %}
       </tbody>

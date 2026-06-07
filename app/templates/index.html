@@ -1,39 +1,63 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Início - Integridade Alimentar{% endblock %}
+{% block title %}Início - MARELLA{% endblock %}
 
 {% block content %}
-  <h1>Integridade Alimentar</h1>
-  <p class="lead">Prato virtual para classificação NOVA, aditivos, consistência, ETA, risco cardiovascular e microbiota.</p>
+  <section class="hero">
+    <div>
+      <h1>MARELLA</h1>
+      <p class="tagline">Matriz de Análise de Rótulos, Elementos e Listas Alimentares</p>
+      <p class="lead">Um espaço simples para consultar alimentos, entender rótulos, montar um prato virtual e gerar uma leitura educativa da refeição.</p>
+      <div class="actions">
+        <a class="btn" href="{% url 'simulacao' %}">Montar prato virtual</a>
+        <a class="btn secondary" href="{% url 'catalogo' %}">Consultar catálogo</a>
+      </div>
+    </div>
+    <img class="hero-logo" src="{% static 'img/marella-logo.jpg' %}" alt="Logo MARELLA">
+  </section>
 
-  <section class="grid">
+  <section class="grid section-gap">
     <div class="panel"><span class="stat">{{ total_alimentos }}</span> alimentos no catálogo</div>
-    <div class="panel"><span class="stat">{{ total_aditivos }}</span> aditivos mapeados</div>
-    <div class="panel"><span class="stat">{{ total_ultraprocessados }}</span> ultraprocessados</div>
+    <div class="panel"><span class="stat">{{ total_aditivos }}</span> componentes mapeados</div>
+    <div class="panel"><span class="stat">{{ total_ultraprocessados }}</span> mais industrializados</div>
     <div class="panel"><span class="stat">{{ total_simulacoes }}</span> simulações salvas</div>
   </section>
 
-  <section class="panel" style="margin-top: 18px;">
-    <h2>Funcionalidades</h2>
-    <div class="grid">
-      {% for item in funcionalidades_resumo %}
-        <p><strong>{{ item.codigo }}</strong><br><a href="{% url item.link %}">{{ item.nome }}</a></p>
-      {% endfor %}
+  <section class="grid section-gap">
+    <div class="panel">
+      <h2>Catálogo</h2>
+      <p>Tipo do alimento, consistência, componentes do rótulo e pontuação aparecem juntos para facilitar a leitura.</p>
+      <a href="{% url 'catalogo' %}">Ver alimentos</a>
     </div>
-    <a class="btn secondary" href="{% url 'funcionalidades' %}">Ver todas</a>
+    <div class="panel">
+      <h2>Comparação</h2>
+      <p>Compare dois alimentos e veja qual opção fica melhor na leitura do projeto.</p>
+      <a href="{% url 'comparar' %}">Comparar opções</a>
+    </div>
+    <div class="panel">
+      <h2>Simulação</h2>
+      <p>Monte o prato virtual com quantidades reais e use essa base para gerar o resumo da refeição.</p>
+      <a href="{% url 'simulacao' %}">Iniciar simulação</a>
+    </div>
+    <div class="panel">
+      <h2>Trocas</h2>
+      <p>Veja sugestões de troca para deixar a refeição mais simples e fácil de entender.</p>
+      <a href="{% url 'trocas' %}">Ver sugestões</a>
+    </div>
   </section>
 
-  <section class="panel" style="margin-top: 18px;">
+  <section class="panel section-gap">
     <h2>Amostra do catálogo</h2>
     <table>
       <thead>
-        <tr><th>Alimento</th><th>NOVA</th><th>Integridade</th></tr>
+        <tr><th>Alimento</th><th>Tipo</th><th>Pontuação</th></tr>
       </thead>
       <tbody>
         {% for alimento in exemplos %}
           <tr>
             <td>{{ alimento.nome }}</td>
-            <td><span class="badge {{ alimento.categoria_css }}">{{ alimento.categoria_nova }}</span></td>
+            <td><span class="badge {{ alimento.categoria_css }}">{{ alimento.perfil_alimentar }}</span></td>
             <td>{{ alimento.indice_integridade }}/100</td>
           </tr>
         {% empty %}

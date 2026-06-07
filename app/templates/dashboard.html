@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Painel - Integridade Alimentar{% endblock %}
+{% block title %}Painel - MARELLA{% endblock %}
 
 {% block content %}
   <h1>Painel</h1>
-  <p class="lead">Resumo dos cadastros, classificação NOVA e simulações recentes.</p>
+  <p class="lead">Resumo dos cadastros, tipos de alimentos e simulações recentes.</p>
 
   <section class="grid">
     <div class="panel"><span class="stat">{{ total_alimentos }}</span> alimentos</div>
-    <div class="panel"><span class="stat">{{ total_aditivos }}</span> aditivos</div>
+    <div class="panel"><span class="stat">{{ total_aditivos }}</span> componentes</div>
     <div class="panel"><span class="stat">{{ total_consistencias }}</span> consistências</div>
-    <div class="panel"><span class="stat">{{ media_integridade }}</span> média de integridade</div>
-    <div class="panel"><span class="stat">{{ alto_risco }}</span> aditivos de alto risco</div>
+    <div class="panel"><span class="stat">{{ media_integridade }}</span> média de pontuação</div>
+    <div class="panel"><span class="stat">{{ alto_risco }}</span> componentes de atenção</div>
   </section>
 
-  <section class="grid" style="margin-top: 18px;">
+  <section class="grid section-gap">
     <div class="panel">
-      <h2>Categorias NOVA</h2>
+      <h2>Tipos de alimentos</h2>
       <table>
-        <thead><tr><th>Categoria</th><th>Total</th></tr></thead>
+        <thead><tr><th>Tipo</th><th>Total</th></tr></thead>
         <tbody>
           {% for categoria in categorias %}
             <tr><td>{{ categoria.rotulo }}</td><td>{{ categoria.total }}</td></tr>
@@ -26,6 +26,7 @@
         </tbody>
       </table>
     </div>
+
     <div class="panel">
       <h2>Últimas simulações</h2>
       <table>

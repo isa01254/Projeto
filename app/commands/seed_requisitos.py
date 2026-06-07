@@ -19,7 +19,7 @@ from app.models import (
 )
 
 class Command(BaseCommand):
-    help = "Cria 5 registros base para as funcionalidades do backend."
+    help = "Cria registros base para demonstrar o fluxo do projeto."
 
 
     def handle(self, *args, **options):
@@ -57,8 +57,8 @@ class Command(BaseCommand):
     def _criar_aditivos(self):
         dados = [
             ("Tartrazina", "Corante", AditivoAlimentar.RISCO_MEDIO, "Pode exigir atenção em indivíduos sensíveis a corantes."),
-            ("Fosfato de Sódio", "Estabilizador", AditivoAlimentar.RISCO_ALTO, "Marcador usado no projeto para risco cardiovascular."),
-            ("Mono e Diglicerídeos", "Emulsionante", AditivoAlimentar.RISCO_ALTO, "Associado ao alerta de perturbação da microbiota."),
+            ("Fosfato de Sódio", "Estabilizador", AditivoAlimentar.RISCO_ALTO, "Componente que pede atenção na leitura do rótulo."),
+            ("Mono e Diglicerídeos", "Emulsionante", AditivoAlimentar.RISCO_ALTO, "Componente usado para observar melhor a composição da refeição."),
             ("Nitrito de Sódio", "Conservante", AditivoAlimentar.RISCO_MEDIO, "Conservante comum em carnes processadas."),
             ("Gordura Vegetal Hidrogenada", "Gordura trans", AditivoAlimentar.RISCO_ALTO, "Marcador de potencial aterogênico elevado."),
         ]
@@ -76,11 +76,11 @@ class Command(BaseCommand):
 
     def _criar_alimentos(self, consistencias):
         dados = [
-            ("Arroz integral", Alimento.NOVA_1, 124, 100, "Fibrosa", "Base in natura/minimamente processada para refeições."),
+            ("Arroz integral", Alimento.NOVA_1, 124, 100, "Fibrosa", "Base simples para refeições do dia a dia."),
             ("Suco de laranja natural", Alimento.NOVA_1, 45, 100, "Líquida", "Alternativa natural para bebidas adoçadas."),
             ("Maçã com casca", Alimento.NOVA_1, 52, 100, "Crocante", "Fruta com fibra e alto esforço de mastigação."),
-            ("Refrigerante cola", Alimento.NOVA_4, 42, 100, "Líquida", "Ultraprocessado líquido com baixo esforço mastigatório."),
-            ("Nuggets industrializados", Alimento.NOVA_4, 290, 100, "Macia", "Ultraprocessado com aditivos e gordura adicionada."),
+            ("Refrigerante cola", Alimento.NOVA_4, 42, 100, "Líquida", "Opção muito industrializada e líquida, com baixo esforço de mastigação."),
+            ("Nuggets industrializados", Alimento.NOVA_4, 290, 100, "Macia", "Opção muito industrializada, com componentes e gordura adicionada."),
         ]
         return {
             nome: Alimento.objects.update_or_create(
@@ -98,9 +98,9 @@ class Command(BaseCommand):
 
     def _criar_associacoes(self, alimentos, aditivos):
         dados = [
-            ("Refrigerante cola", "Tartrazina", "Corante usado como exemplo de painel toxicológico."),
-            ("Refrigerante cola", "Fosfato de Sódio", "Estabilizador associado ao risco cardiovascular no projeto."),
-            ("Nuggets industrializados", "Mono e Diglicerídeos", "Emulsionante usado para marcador de disbiose."),
+            ("Refrigerante cola", "Tartrazina", "Corante usado como exemplo de componente do rótulo."),
+            ("Refrigerante cola", "Fosfato de Sódio", "Estabilizador que pede atenção na leitura do rótulo."),
+            ("Nuggets industrializados", "Mono e Diglicerídeos", "Emulsionante usado para observação da composição."),
             ("Nuggets industrializados", "Nitrito de Sódio", "Conservante comum em produtos cárneos processados."),
             ("Nuggets industrializados", "Gordura Vegetal Hidrogenada", "Marcador de gordura trans para o score cardíaco."),
         ]
@@ -113,11 +113,11 @@ class Command(BaseCommand):
 
     def _criar_trocas(self, alimentos):
         dados = [
-            ("Refrigerante cola", "Suco de laranja natural", "Reduz ultraprocessamento e troca bebida aditivada por fruta."),
+            ("Refrigerante cola", "Suco de laranja natural", "Troca uma bebida muito industrializada por uma opção mais simples."),
             ("Refrigerante cola", "Maçã com casca", "Aumenta mastigação e fibra no lugar de bebida líquida adoçada."),
-            ("Refrigerante cola", "Arroz integral", "Exemplo didático para reduzir aditivos em um prato completo."),
-            ("Nuggets industrializados", "Arroz integral", "Troca reduz gordura adicionada, fosfatos e emulsionantes."),
-            ("Nuggets industrializados", "Maçã com casca", "Sugestão educativa para substituir ultraprocessado por alimento in natura."),
+            ("Refrigerante cola", "Arroz integral", "Exemplo didático para reduzir componentes de atenção em um prato completo."),
+            ("Nuggets industrializados", "Arroz integral", "Troca reduz gordura adicionada e componentes de atenção."),
+            ("Nuggets industrializados", "Maçã com casca", "Sugestão educativa para trocar por uma opção mais simples."),
         ]
         for ruim, substituto, justificativa in dados:
             SugestaoTroca.objects.update_or_create(
@@ -163,16 +163,16 @@ class Command(BaseCommand):
     def _mostrar_resumo(self):
         contagens = {
             "RF01 Alimentos": Alimento.objects.count(),
-            "RF02 Aditivos": AditivoAlimentar.objects.count(),
+            "RF02 Componentes": AditivoAlimentar.objects.count(),
             "RF03 Associações": AlimentoAditivo.objects.count(),
             "RF04 Consistências": ConsistenciaFisica.objects.count(),
             "RF05 Simulações": SimulacaoRefeicao.objects.count(),
             "RF06 Itens": ItemRefeicao.objects.count(),
-            "RF07 Cálculos ETA": CalculoETA.objects.count(),
-            "RF08 Scores cardíacos": ScoreRiscoCardio.objects.count(),
-            "RF09 Marcadores disbiose": MarcadorDisbiose.objects.count(),
+            "RF07 Gastos estimados": CalculoETA.objects.count(),
+            "RF08 Atenções ao coração": ScoreRiscoCardio.objects.count(),
+            "RF09 Alertas intestinais": MarcadorDisbiose.objects.count(),
             "RF10 Sugestões de troca": SugestaoTroca.objects.count(),
-            "RF11 Laudos": LaudoMetabolico.objects.count(),
+            "RF11 Resumos": LaudoMetabolico.objects.count(),
             "RF15 Relatórios": RelatorioExportavel.objects.count(),
         }
         for nome, total in contagens.items():

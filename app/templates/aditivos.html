@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Aditivos - Integridade Alimentar{% endblock %}
+{% block title %}Componentes - MARELLA{% endblock %}
 
 {% block content %}
-  <h1>Painel toxicológico de aditivos</h1>
-  <p class="lead">Mapeamento de aditivos, função tecnológica e grau de risco.</p>
+  <h1>Componentes do rótulo</h1>
+  <p class="lead">Lista de componentes cadastrados, uso no produto e nível de atenção.</p>
 
-  <form class="inline" method="get">
+  <div class="actions">
+    <a class="btn" href="{% url 'catalogo' %}">Ver alimentos</a>
+    <a class="btn secondary" href="{% url 'simulacao' %}">Montar prato</a>
+  </div>
+
+  <form class="inline section-gap" method="get">
     {% for field in form %}
       <div>
         {{ field.label_tag }}
@@ -19,7 +24,7 @@
   <section class="panel">
     <table>
       <thead>
-        <tr><th>Aditivo</th><th>Função</th><th>Risco</th><th>Impacto fisiológico</th></tr>
+        <tr><th>Componente</th><th>Uso no produto</th><th>Atenção</th><th>Observação</th></tr>
       </thead>
       <tbody>
         {% for aditivo in aditivos %}
@@ -30,7 +35,7 @@
             <td>{{ aditivo.impacto_fisiologico }}</td>
           </tr>
         {% empty %}
-          <tr><td colspan="4">Nenhum aditivo encontrado.</td></tr>
+          <tr><td colspan="4">Nenhum componente encontrado.</td></tr>
         {% endfor %}
       </tbody>
     </table>

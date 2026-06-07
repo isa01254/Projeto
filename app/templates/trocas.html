@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Trocas - Integridade Alimentar{% endblock %}
+{% block title %}Trocas - MARELLA{% endblock %}
 
 {% block content %}
-  <h1>Substituição inteligente</h1>
-  <p class="lead">Sugestões de troca para reduzir ultraprocessamento e aditivos críticos.</p>
+  <h1>Sugestões de troca</h1>
+  <p class="lead">Ideias simples para substituir opções muito industrializadas.</p>
 
   <section class="panel">
     <h2>Sugestões cadastradas</h2>
     <table>
-      <thead><tr><th>Ultraprocessado</th><th>Substituto</th><th>Justificativa</th></tr></thead>
+      <thead><tr><th>Opção atual</th><th>Sugestão</th><th>Motivo</th></tr></thead>
       <tbody>
         {% for sugestao in sugestoes %}
           <tr>
@@ -24,15 +24,15 @@
     </table>
   </section>
 
-  <section class="panel" style="margin-top: 18px;">
-    <h2>Ultraprocessados sem troca</h2>
+  <section class="panel section-gap">
+    <h2>Opções muito industrializadas sem troca</h2>
     <table>
-      <thead><tr><th>Alimento</th><th>Categoria</th></tr></thead>
+      <thead><tr><th>Alimento</th><th>Tipo</th></tr></thead>
       <tbody>
         {% for alimento in ultraprocessados_sem_troca %}
-          <tr><td>{{ alimento.nome }}</td><td>{{ alimento.categoria_nova }}</td></tr>
+          <tr><td>{{ alimento.nome }}</td><td>{{ alimento.perfil_alimentar }}</td></tr>
         {% empty %}
-          <tr><td colspan="2">Todos os ultraprocessados têm ao menos uma sugestão.</td></tr>
+          <tr><td colspan="2">Todas as opções muito industrializadas têm ao menos uma sugestão.</td></tr>
         {% endfor %}
       </tbody>
     </table>
