@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Criar conta - MARELLA{% endblock %}
+
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-card">
+    <div>
+      <p class="tagline">Novo acesso</p>
+      <h1>Criar conta</h1>
+      <p class="lead">
+        Cadastre um usuário para acessar a simulação de refeição, salvar registros
+        e gerar resumos dentro da MARELLA.
+      </p>
+
+      <div class="choice">
+        <strong>Já tenho conta</strong>
+        <span>Se você já possui cadastro, volte para a tela de login.</span>
+
+        <div class="actions">
+          <a class="btn secondary" href="{% url 'login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">
+            Fazer login
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <section class="panel">
+      <h2>Dados da conta</h2>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {% if next %}
+          <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
+
+        {{ form.non_field_errors }}
+
+        <p>
+          {{ form.username.label_tag }}
+          {{ form.username }}
+          {{ form.username.errors }}
+        </p>
+
+        <p>
+          {{ form.email.label_tag }}
+          {{ form.email }}
+          {{ form.email.errors }}
+        </p>
+
+        <p>
+          {{ form.password1.label_tag }}
+          {{ form.password1 }}
+          {{ form.password1.errors }}
+        </p>
+
+        <p>
+          {{ form.password2.label_tag }}
+          {{ form.password2 }}
+          {{ form.password2.errors }}
+        </p>
+
+        <button class="btn" type="submit">Criar conta</button>
+      </form>
+    </section>
+  </div>
+</section>
+{% endblock %}

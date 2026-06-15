@@ -1,11 +1,19 @@
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
-from .forms import AditivoBuscaForm, CatalogoFiltroForm, ComparacaoForm, ItemRefeicaoForm
+from .forms import (
+    AditivoBuscaForm,
+    CadastroUsuarioForm,
+    CatalogoFiltroForm,
+    ComparacaoForm,
+    ItemRefeicaoForm,
+)
 from .models import (
     AditivoAlimentar,
     Alimento,
@@ -31,6 +39,30 @@ def home(request):
         "exemplos": alimentos.order_by("categoria_nova", "nome")[:6],
     }
     return render(request, "index.html", contexto)
+
+
+def cadastro_usuario(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
+    next_url = request.POST.get("next") or request.GET.get("next") or ""
+    form = CadastroUsuarioForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        usuario = form.save()
+        login(request, usuario)
+        messages.success(request, "Conta criada com sucesso. Voce ja esta conectado.")
+
+        if next_url and url_has_allowed_host_and_scheme(
+            url=next_url,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            return redirect(next_url)
+
+        return redirect("dashboard")
+
+    return render(request, "cadastro.html", {"form": form, "next": next_url})
 
 
 def dashboard(request):

@@ -1,54 +1,60 @@
 {% extends "base.html" %}
 
-{% block title %}Login - MARELLA{% endblock %}
+{% block title %}Entrar - MARELLA{% endblock %}
 
 {% block content %}
-  <section class="auth-wrap">
-    <div class="auth-card">
-      <div>
-        <p class="tagline">Acesso ao sistema</p>
-        <h1>Entrar ou criar conta</h1>
-        <p class="lead">
-          Entre com seu usuário para acessar a simulação de refeição, gerar resumo
-          e visualizar dados protegidos. Se ainda não tiver conta, use o painel
-          administrativo para criar um novo usuário.
-        </p>
+<section class="auth-wrap">
+  <div class="auth-card">
+    <div>
+      <p class="tagline">Acesso ao sistema</p>
+      <h1>Entrar na MARELLA</h1>
+      <p class="lead">
+        Entre para acessar a simulação de refeição, gerar resumos e consultar o histórico.
+      </p>
 
-        <div class="choice">
-          <strong>Já tenho conta</strong>
-          <span>Use usuário e senha no formulário ao lado.</span>
-        </div>
-
-        <div class="choice">
-          <strong>Quero criar conta</strong>
-          <span>O cadastro é feito pelo administrador do projeto.</span>
-          <div class="actions">
-            <a class="btn ghost" href="{% url 'admin:index' %}">Criar conta no admin</a>
-          </div>
-        </div>
+      <div class="choice">
+        <strong>Já tenho conta</strong>
+        <span>Use seu usuário e senha no formulário.</span>
       </div>
 
-      <section class="panel">
-        <h2>Login</h2>
-        <form method="post">
-          {% csrf_token %}
-          {{ form.non_field_errors }}
-
-          <p>
-            {{ form.username.label_tag }}
-            {{ form.username }}
-            {{ form.username.errors }}
-          </p>
-
-          <p>
-            {{ form.password.label_tag }}
-            {{ form.password }}
-            {{ form.password.errors }}
-          </p>
-
-          <button class="btn" type="submit">Entrar</button>
-        </form>
-      </section>
+      <div class="choice">
+        <strong>Ainda não tenho conta</strong>
+        <span>Crie uma conta para usar as áreas protegidas do sistema.</span>
+        <div class="actions">
+          <a class="btn secondary" href="{% url 'cadastro' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">
+            Criar conta
+          </a>
+        </div>
+      </div>
     </div>
-  </section>
+
+    <section class="panel">
+      <h2>Login</h2>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {% if request.GET.next %}
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% endif %}
+
+        {{ form.non_field_errors }}
+
+        <p>
+          {{ form.username.label_tag }}
+          {{ form.username }}
+          {{ form.username.errors }}
+        </p>
+
+        <p>
+          {{ form.password.label_tag }}
+          {{ form.password }}
+          {{ form.password.errors }}
+        </p>
+
+        <button class="btn" type="submit">Entrar</button>
+      </form>
+    </section>
+  </div>
+</section>
 {% endblock %}

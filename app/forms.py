@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 from .models import AditivoAlimentar, Alimento, ItemRefeicao
 
@@ -8,6 +10,29 @@ class BootstrapFormMixin:
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.setdefault("class", "form-control")
+
+
+class CadastroUsuarioForm(BootstrapFormMixin, UserCreationForm):
+    email = forms.EmailField(
+        label="E-mail",
+        required=False,
+        widget=forms.EmailInput(attrs={"placeholder": "seuemail@exemplo.com"}),
+    )
+
+    class Meta:
+        model = User
+        fields = ["username", "email", "password1", "password2"]
+        labels = {
+            "username": "Usuario",
+            "password1": "Senha",
+            "password2": "Confirmar senha",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs.update({"placeholder": "Crie um nome de usuario"})
+        self.fields["password1"].widget.attrs.update({"placeholder": "Crie uma senha"})
+        self.fields["password2"].widget.attrs.update({"placeholder": "Repita a senha"})
 
 
 class CatalogoFiltroForm(BootstrapFormMixin, forms.Form):
