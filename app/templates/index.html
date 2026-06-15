@@ -6,15 +6,23 @@
 {% block content %}
   <section class="hero">
     <div>
-      <h1>MARELLA</h1>
       <p class="tagline">Matriz de Análise de Rótulos, Elementos e Listas Alimentares</p>
-      <p class="lead">Um espaço simples para consultar alimentos, entender rótulos, montar um prato virtual e gerar uma leitura educativa da refeição.</p>
+      <h1>Consulte, compare e simule refeições com mais clareza.</h1>
+      <p class="lead">
+        A MARELLA organiza informações de alimentos, componentes do rótulo,
+        consistência e pontuação em um fluxo simples: catálogo, comparação e
+        simulação de refeição.
+      </p>
       <div class="actions">
-        <a class="btn" href="{% url 'simulacao' %}">Montar prato virtual</a>
+        <a class="btn" href="{% url 'simulacao' %}">Simulação de refeição</a>
         <a class="btn secondary" href="{% url 'catalogo' %}">Consultar catálogo</a>
+        <a class="btn ghost" href="{% url 'comparar' %}">Comparar alimentos</a>
       </div>
     </div>
-    <img class="hero-logo" src="{% static 'img/marella-logo.jpg' %}" alt="Logo MARELLA">
+
+    <div class="hero-mark">
+      <img src="{% static 'img/marella-symbol.jpg' %}" alt="Símbolo MARELLA">
+    </div>
   </section>
 
   <section class="grid section-gap">
@@ -27,43 +35,32 @@
   <section class="grid section-gap">
     <div class="panel">
       <h2>Catálogo</h2>
-      <p>Tipo do alimento, consistência, componentes do rótulo e pontuação aparecem juntos para facilitar a leitura.</p>
-      <a href="{% url 'catalogo' %}">Ver alimentos</a>
+      <p>Consulte alimentos, energia, tipo, consistência, componentes e pontuação.</p>
+      <a href="{% url 'catalogo' %}">Abrir catálogo</a>
     </div>
+
+    <div class="panel">
+      <h2>Componentes e consistências</h2>
+      <p>Veja componentes do rótulo e informações de textura e mastigação.</p>
+      <div class="actions">
+        <a class="btn ghost" href="{% url 'aditivos' %}">Componentes</a>
+        <a class="btn ghost" href="{% url 'consistencias' %}">Consistências</a>
+      </div>
+    </div>
+
     <div class="panel">
       <h2>Comparação</h2>
-      <p>Compare dois alimentos e veja qual opção fica melhor na leitura do projeto.</p>
-      <a href="{% url 'comparar' %}">Comparar opções</a>
+      <p>Compare dois alimentos cadastrados e veja qual opção faz mais sentido.</p>
+      <a href="{% url 'comparar' %}">Comparar alimentos</a>
     </div>
-    <div class="panel">
-      <h2>Simulação</h2>
-      <p>Monte o prato virtual com quantidades reais e use essa base para gerar o resumo da refeição.</p>
-      <a href="{% url 'simulacao' %}">Iniciar simulação</a>
-    </div>
-    <div class="panel">
-      <h2>Trocas</h2>
-      <p>Veja sugestões de troca para deixar a refeição mais simples e fácil de entender.</p>
-      <a href="{% url 'trocas' %}">Ver sugestões</a>
-    </div>
-  </section>
 
-  <section class="panel section-gap">
-    <h2>Amostra do catálogo</h2>
-    <table>
-      <thead>
-        <tr><th>Alimento</th><th>Tipo</th><th>Pontuação</th></tr>
-      </thead>
-      <tbody>
-        {% for alimento in exemplos %}
-          <tr>
-            <td>{{ alimento.nome }}</td>
-            <td><span class="badge {{ alimento.categoria_css }}">{{ alimento.perfil_alimentar }}</span></td>
-            <td>{{ alimento.indice_integridade }}/100</td>
-          </tr>
-        {% empty %}
-          <tr><td colspan="3">Sem alimentos cadastrados.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="panel">
+      <h2>Simulação de refeição</h2>
+      <p>Monte um prato virtual, gere resumo, veja histórico e sugestões de troca.</p>
+      <div class="actions">
+        <a class="btn ghost" href="{% url 'simulacao' %}">Simular</a>
+        <a class="btn ghost" href="{% url 'trocas' %}">Trocas</a>
+      </div>
+    </div>
   </section>
 {% endblock %}

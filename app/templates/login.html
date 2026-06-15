@@ -1,28 +1,54 @@
 {% extends "base.html" %}
 
-{% block title %}Entrar - MARELLA{% endblock %}
+{% block title %}Login - MARELLA{% endblock %}
 
 {% block content %}
-  <h1>Entrar</h1>
+  <section class="auth-wrap">
+    <div class="auth-card">
+      <div>
+        <p class="tagline">Acesso ao sistema</p>
+        <h1>Entrar ou criar conta</h1>
+        <p class="lead">
+          Entre com seu usuário para acessar a simulação de refeição, gerar resumo
+          e visualizar dados protegidos. Se ainda não tiver conta, use o painel
+          administrativo para criar um novo usuário.
+        </p>
 
-  <section class="panel narrow">
-    <form method="post">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
+        <div class="choice">
+          <strong>Já tenho conta</strong>
+          <span>Use usuário e senha no formulário ao lado.</span>
+        </div>
 
-      <p>
-        {{ form.username.label_tag }}
-        {{ form.username }}
-        {{ form.username.errors }}
-      </p>
+        <div class="choice">
+          <strong>Quero criar conta</strong>
+          <span>O cadastro é feito pelo administrador do projeto.</span>
+          <div class="actions">
+            <a class="btn ghost" href="{% url 'admin:index' %}">Criar conta no admin</a>
+          </div>
+        </div>
+      </div>
 
-      <p>
-        {{ form.password.label_tag }}
-        {{ form.password }}
-        {{ form.password.errors }}
-      </p>
+      <section class="panel">
+        <h2>Login</h2>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
 
-      <button class="btn" type="submit">Entrar</button>
-    </form>
+          <p>
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {{ form.username.errors }}
+          </p>
+
+          <p>
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            {{ form.password.errors }}
+          </p>
+
+          <button class="btn" type="submit">Entrar</button>
+        </form>
+      </section>
+    </div>
   </section>
 {% endblock %}

@@ -9,6 +9,7 @@
   <style>
     :root {
       --bg: #fbf2e5;
+      --nav: #fff7ec;
       --card: #fffaf2;
       --soft: #f2dfc9;
       --text: #2b2018;
@@ -16,7 +17,7 @@
       --line: #ead8c4;
       --wine: #7f0d22;
       --wine-dark: #5b0717;
-      --olive: #6f7a28;
+      --olive: #66712a;
       --terra: #e85d3d;
       --danger: #8a1020;
     }
@@ -40,21 +41,22 @@
     a:hover { color: var(--terra); }
 
     header {
-      background: var(--card);
+      background: var(--nav);
       border-bottom: 1px solid var(--line);
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
     }
 
     .nav {
       align-items: center;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 18px;
+      display: grid;
+      gap: 18px;
+      grid-template-columns: auto 1fr;
       margin: 0 auto;
-      max-width: 1160px;
-      padding: 12px 20px;
+      max-width: 1240px;
+      min-height: 76px;
+      padding: 10px 20px;
     }
 
     .brand {
@@ -62,17 +64,18 @@
       color: var(--wine);
       display: flex;
       gap: 10px;
-      margin-right: 10px;
+      min-width: 280px;
     }
 
     .brand img {
       border-radius: 50%;
-      height: 46px;
+      height: 48px;
       object-fit: cover;
-      width: 46px;
+      width: 48px;
     }
 
     .brand-name {
+      color: var(--wine);
       display: block;
       font-family: Georgia, "Times New Roman", serif;
       font-size: 1.5rem;
@@ -83,36 +86,91 @@
     .brand-subtitle {
       color: var(--muted);
       display: block;
-      font-size: .75rem;
+      font-size: .76rem;
       font-weight: 600;
       line-height: 1.2;
-      margin-top: 3px;
-      max-width: 360px;
+      margin-top: 4px;
+      max-width: 390px;
+    }
+
+    .menu-toggle { display: none; }
+
+    .hamburger {
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+      height: 42px;
+      justify-content: center;
+      justify-self: end;
+      width: 46px;
+    }
+
+    .hamburger span,
+    .hamburger span::before,
+    .hamburger span::after {
+      background: var(--wine);
+      border-radius: 999px;
+      content: "";
+      display: block;
+      height: 2px;
+      position: relative;
+      width: 22px;
+    }
+
+    .hamburger span::before { position: absolute; top: -7px; }
+    .hamburger span::after { position: absolute; top: 7px; }
+
+    .nav-links {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .nav-group {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .nav-group.primary {
+      flex: 1 1 auto;
+    }
+
+    .nav-group.secondary {
+      border-left: 1px solid var(--line);
+      padding-left: 10px;
     }
 
     .nav-link,
     .nav button {
       background: transparent;
       border: 0;
-      border-radius: 6px;
+      border-radius: 7px;
       color: var(--text);
       cursor: pointer;
       font: inherit;
-      padding: 8px 9px;
+      padding: 8px 10px;
+      white-space: nowrap;
     }
 
     .nav-link:hover,
     .nav button:hover {
-      background: #f5e5d1;
+      background: #f3e5d3;
       color: var(--wine);
     }
 
-    .nav form { margin-left: auto; }
+    .logout-form { margin: 0; }
 
     main {
       margin: 0 auto;
-      max-width: 1160px;
-      padding: 28px 20px 52px;
+      max-width: 1180px;
+      padding: 30px 20px 56px;
     }
 
     h1, h2, h3 {
@@ -122,38 +180,49 @@
       margin-top: 0;
     }
 
-    h1 { font-size: 2.7rem; margin-bottom: 10px; }
-    h2 { font-size: 1.4rem; margin-bottom: 12px; }
+    h1 { font-size: 2.45rem; margin-bottom: 10px; }
+    h2 { font-size: 1.35rem; margin-bottom: 12px; }
+    h3 { font-size: 1.05rem; margin-bottom: 8px; }
 
     p { margin-top: 0; }
 
     .lead {
       color: var(--muted);
       font-size: 1.05rem;
-      max-width: 760px;
+      max-width: 800px;
     }
 
     .hero {
       align-items: center;
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 10px;
       display: grid;
-      gap: 28px;
-      grid-template-columns: minmax(0, 1.05fr) minmax(240px, .95fr);
-      padding: 30px;
+      gap: 30px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(230px, .8fr);
+      padding: 32px;
     }
 
-    .hero-logo {
-      justify-self: end;
-      max-width: 420px;
-      width: 100%;
+    .hero-mark {
+      align-items: center;
+      background: #fff3e5;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      min-height: 240px;
+      padding: 24px;
+    }
+
+    .hero-mark img {
+      max-width: 220px;
+      width: 70%;
     }
 
     .tagline {
       color: var(--wine);
       font-weight: 700;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .grid {
@@ -165,13 +234,12 @@
     .panel {
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 10px;
       overflow-x: auto;
       padding: 18px;
     }
 
     .section-gap { margin-top: 18px; }
-    .narrow { max-width: 460px; }
 
     .stat {
       color: var(--wine);
@@ -190,7 +258,7 @@
 
     th, td {
       border-bottom: 1px solid var(--line);
-      padding: 11px 10px;
+      padding: 12px 10px;
       text-align: left;
       vertical-align: top;
     }
@@ -205,7 +273,7 @@
     form.inline {
       align-items: end;
       display: grid;
-      gap: 12px;
+      gap: 14px;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       margin-bottom: 18px;
     }
@@ -213,36 +281,39 @@
     input, select {
       background: #fffdf8;
       border: 1px solid #cdb89f;
-      border-radius: 6px;
+      border-radius: 7px;
       color: var(--text);
       font: inherit;
-      padding: 10px 11px;
+      min-height: 44px;
+      padding: 10px 12px;
       width: 100%;
     }
 
     label {
       display: block;
       font-weight: 700;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .actions {
+      align-items: center;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 16px;
     }
 
     .btn {
       background: var(--wine);
       border: 0;
-      border-radius: 6px;
+      border-radius: 7px;
       color: #fffaf2;
       cursor: pointer;
       display: inline-block;
       font: inherit;
       font-weight: 800;
-      padding: 10px 14px;
+      padding: 11px 15px;
+      text-align: center;
     }
 
     .btn:hover {
@@ -251,6 +322,18 @@
     }
 
     .btn.secondary { background: var(--terra); }
+
+    .btn.ghost {
+      background: transparent;
+      border: 1px solid var(--wine);
+      color: var(--wine);
+    }
+
+    .btn.ghost:hover {
+      background: #f7e3dd;
+      color: var(--wine);
+    }
+
     .btn.danger { background: var(--danger); }
 
     .badge {
@@ -269,6 +352,14 @@
     .primary { background: var(--terra); }
     .secondary { background: #7d7466; }
 
+    .page-head {
+      align-items: end;
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
     .messages {
       list-style: none;
       margin: 0 0 18px;
@@ -278,7 +369,7 @@
     .messages li {
       background: #fff4dc;
       border: 1px solid #e7bd7c;
-      border-radius: 6px;
+      border-radius: 7px;
       margin-bottom: 8px;
       padding: 10px 12px;
     }
@@ -289,13 +380,107 @@
       padding-left: 20px;
     }
 
-    @media (max-width: 760px) {
-      .nav { align-items: flex-start; flex-direction: column; }
-      .nav form { margin-left: 0; }
-      .hero { grid-template-columns: 1fr; padding: 22px; }
-      .hero-logo { justify-self: start; max-width: 340px; }
-      h1 { font-size: 2.15rem; }
-      table { min-width: 540px; }
+    .auth-wrap {
+      align-items: center;
+      display: grid;
+      min-height: calc(100vh - 180px);
+    }
+
+    .auth-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      display: grid;
+      gap: 24px;
+      grid-template-columns: minmax(0, .95fr) minmax(300px, 1.05fr);
+      margin: 0 auto;
+      max-width: 920px;
+      padding: 28px;
+      width: 100%;
+    }
+
+    .choice {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      margin-top: 12px;
+      padding: 14px;
+    }
+
+    .choice strong {
+      color: var(--wine);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 1100px) {
+      .nav {
+        grid-template-columns: 1fr auto;
+      }
+
+      .hamburger { display: flex; }
+
+      .nav-links {
+        display: none;
+        grid-column: 1 / -1;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+      }
+
+      .menu-toggle:checked ~ .nav-links {
+        display: flex;
+      }
+
+      .nav-group,
+      .nav-group.primary,
+      .nav-group.secondary {
+        align-items: stretch;
+        border-left: 0;
+        flex-direction: column;
+        padding-left: 0;
+        width: 100%;
+      }
+
+      .nav-link,
+      .nav button {
+        background: #fffaf2;
+        border: 1px solid var(--line);
+        text-align: left;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 860px) {
+      main { padding: 22px 14px 44px; }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .brand-subtitle {
+        max-width: 230px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 22px;
+      }
+
+      .hero-mark { min-height: 170px; }
+
+      h1 { font-size: 2.05rem; }
+
+      table { min-width: 560px; }
+
+      .page-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .auth-card {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -311,20 +496,33 @@
         </span>
       </a>
 
-      <a class="nav-link" href="{% url 'dashboard' %}">Painel</a>
-      <a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a>
-      <a class="nav-link" href="{% url 'aditivos' %}">Componentes</a>
-      <a class="nav-link" href="{% url 'comparar' %}">Comparar</a>
-      <a class="nav-link" href="{% url 'simulacao' %}">Simulação</a>
+      <input class="menu-toggle" type="checkbox" id="menu-toggle">
+      <label class="hamburger" for="menu-toggle" aria-label="Abrir menu"><span></span></label>
 
-      {% if request.user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <button type="submit">Sair</button>
-        </form>
-      {% else %}
-        <a class="nav-link" href="{% url 'login' %}">Entrar</a>
-      {% endif %}
+      <div class="nav-links">
+        <div class="nav-group primary">
+          <a class="nav-link" href="{% url 'home' %}">Início</a>
+          <a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a>
+          <a class="nav-link" href="{% url 'aditivos' %}">Componentes</a>
+          <a class="nav-link" href="{% url 'consistencias' %}">Consistências</a>
+          <a class="nav-link" href="{% url 'comparar' %}">Comparar</a>
+          <a class="nav-link" href="{% url 'simulacao' %}">Simulação de refeição</a>
+        </div>
+
+        <div class="nav-group secondary">
+          <a class="nav-link" href="{% url 'dashboard' %}">Painel</a>
+          <a class="nav-link" href="{% url 'trocas' %}">Trocas</a>
+          <a class="nav-link" href="{% url 'historico' %}">Histórico</a>
+          {% if request.user.is_authenticated %}
+            <form class="logout-form" method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit">Sair</button>
+            </form>
+          {% else %}
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+          {% endif %}
+        </div>
+      </div>
     </nav>
   </header>
 
