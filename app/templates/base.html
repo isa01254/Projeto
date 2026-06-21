@@ -9,13 +9,14 @@
   <style>
     :root {
       --bg: #fbf2e5;
-      --nav: #fbf2e5;
+      --nav: #7f0d22;
       --card: #fffaf2;
       --surface: #fffaf2;
       --olive: #708238;
       --soft: #f2dfc9;
       --line: #ead8c4;
       --wine: #7f0d22;
+      --wine-dark: #5b0717;
       --danger: #8a1020;
       --text: #2b241f;
       --muted: #6f6258;
@@ -43,7 +44,7 @@
 
     header {
       background: var(--nav);
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--wine-dark);
       position: sticky;
       top: 0;
       z-index: 20;
@@ -62,10 +63,14 @@
 
     .brand {
       align-items: center;
-      color: var(--wine);
+      color: var(--light-text);
       display: flex;
       gap: 10px;
       min-width: 280px;
+    }
+
+    .brand:visited {
+      color: var(--light-text);
     }
 
     .brand img {
@@ -76,7 +81,7 @@
     }
 
     .brand-name {
-      color: var(--wine);
+      color: var(--light-text);
       display: block;
       font-family: Georgia, "Times New Roman", serif;
       font-size: 1.5rem;
@@ -85,7 +90,7 @@
     }
 
     .brand-subtitle {
-      color: var(--muted);
+      color: var(--soft);
       display: block;
       font-size: .76rem;
       font-weight: 600;
@@ -100,7 +105,7 @@
 
     .hamburger {
       align-items: center;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255, 250, 242, .45);
       border-radius: 8px;
       cursor: pointer;
       display: none;
@@ -113,7 +118,7 @@
     .hamburger span,
     .hamburger span::before,
     .hamburger span::after {
-      background: var(--wine);
+      background: var(--light-text);
       border-radius: 999px;
       content: "";
       display: block;
@@ -158,7 +163,7 @@
       background: transparent;
       border: 0;
       border-radius: 7px;
-      color: var(--text);
+      color: var(--light-text);
       cursor: pointer;
       font: inherit;
       font-size: .93rem;
@@ -170,13 +175,13 @@
     }
 
     .nav-link:visited {
-      color: var(--text);
+      color: var(--light-text);
     }
 
     .nav-link:hover,
     .nav button:hover {
-      background: #f3e5d3;
-      color: var(--wine);
+      background: rgba(255, 250, 242, .16);
+      color: var(--light-text);
     }
 
     .logout-form {
@@ -681,17 +686,17 @@
 
       .nav-link,
       .nav button {
-        background: #fffaf2;
-        border: 1px solid var(--line);
-        color: var(--text);
+        background: rgba(255, 250, 242, .08);
+        border: 1px solid rgba(255, 250, 242, .22);
+        color: var(--light-text);
         text-align: left;
         width: 100%;
       }
 
       .nav-link:hover,
       .nav button:hover {
-        background: #f3e5d3;
-        color: var(--wine);
+        background: rgba(255, 250, 242, .16);
+        color: var(--light-text);
       }
 
       .logout-form {
@@ -749,7 +754,7 @@
         <button type="submit" class="nav-link logout-button">Sair</button>
       </form>
     {% else %}
-      <a class="nav-link" href="{% url 'login' %}">Login</a>
+      <a class="nav-link" href="{% url 'login' %}">Entrar</a>
     {% endif %}
     </div>
   </div>

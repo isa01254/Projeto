@@ -51,7 +51,7 @@ def cadastro_usuario(request):
     if request.method == "POST" and form.is_valid():
         usuario = form.save()
         login(request, usuario)
-        messages.success(request, "Conta criada com sucesso. Voce ja esta conectado.")
+        messages.success(request, "Conta criada com sucesso. Você já está conectado.")
 
         if next_url and url_has_allowed_host_and_scheme(
             url=next_url,
@@ -252,6 +252,11 @@ def exportar_relatorio(request):
     _, _, _, laudo = calcular_componentes(simulacao)
     relatorio = RelatorioExportavel.objects.create(laudo_metabolico=laudo, formato_saida="HTML")
     return HttpResponse(relatorio.gerar_documento_html(), content_type="text/html; charset=utf-8")
+
+
+@login_required
+def perfil(request):
+    return render(request, "perfil.html")
 
 
 @login_required

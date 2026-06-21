@@ -12,6 +12,7 @@ urlpatterns = [
     path("cadastro/", views.cadastro_usuario, name="cadastro"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("laudo/", views.laudo_simulacao, name="laudo"),
+    path("resumo/", views.laudo_simulacao, name="resumo"),
     path("catalogo/", views.catalogo_alimentos, name="catalogo"),
     path("aditivos/", views.painel_aditivos, name="aditivos"),
     path("consistencias/", views.consistencias, name="consistencias"),
@@ -21,7 +22,5 @@ urlpatterns = [
     path("comparar/", views.comparar_alimentos, name="comparar"),
     path("simulacao/", views.simulacao_refeicao, name="simulacao"),
     path("simulacao/remover/<int:item_id>/", views.remover_item, name="remover_item"),
-    path("laudo/", views.laudo_simulacao, name="laudo"),
     path("relatorio/html/", views.exportar_relatorio, name="exportar_relatorio"),
 ]
-
