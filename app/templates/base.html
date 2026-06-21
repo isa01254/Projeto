@@ -2,6 +2,7 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
+  <link rel="icon" href="{% static 'img/marella-symbol.jpg' %}" type="image/jpeg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Marella{% endblock %}</title>
@@ -65,7 +66,7 @@
       align-items: center;
       color: var(--light-text);
       display: flex;
-      gap: 10px;
+      gap: 12px;
       min-width: 280px;
     }
 
@@ -73,11 +74,29 @@
       color: var(--light-text);
     }
 
-    .brand img {
+    .brand-logo {
+      align-items: center;
+      background: #fffaf2;
       border-radius: 50%;
-      height: 48px;
-      object-fit: cover;
-      width: 48px;
+      display: flex;
+      flex-shrink: 0;
+      height: 54px;
+      justify-content: center;
+      overflow: hidden;
+      width: 54px;
+    }
+
+    .brand-logo img {
+      display: block;
+      height: 44px;
+      object-fit: contain;
+      object-position: center;
+      transform: translateX(1px);
+      width: 44px;
+    }
+
+    .brand-text {
+      display: block;
     }
 
     .brand-name {
@@ -536,6 +555,54 @@
       color: var(--muted);
     }
 
+    .profile-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .8fr);
+    }
+
+    .profile-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .profile-list li {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+    }
+
+    .profile-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .summary-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .empty-state {
+      background: var(--card);
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      padding: 22px;
+      text-align: center;
+    }
+
+    .btn.disabled {
+      cursor: not-allowed;
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    .inline-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
     @media (max-width: 1100px) {
       .nav {
         grid-template-columns: 1fr;
@@ -558,61 +625,6 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
-
-    .profile-grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, .8fr);
-}
-
-.profile-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.profile-list li {
-  border-bottom: 1px solid var(--line);
-  padding: 10px 0;
-}
-
-.profile-list li:last-child {
-  border-bottom: 0;
-}
-
-.summary-grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.empty-state {
-  background: var(--card);
-  border: 1px dashed var(--line);
-  border-radius: 10px;
-  padding: 22px;
-  text-align: center;
-}
-
-.btn.disabled {
-  cursor: not-allowed;
-  opacity: .55;
-  pointer-events: none;
-}
-
-.inline-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-@media (max-width: 860px) {
-  .profile-grid,
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-}
 
     @media (max-width: 860px) {
       main {
@@ -651,6 +663,11 @@
       .auth-card {
         grid-template-columns: 1fr;
         padding: 20px;
+      }
+
+      .profile-grid,
+      .summary-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -711,6 +728,8 @@
         grid-template-columns: 1fr;
       }
     }
+
+
   </style>
 </head>
 
@@ -718,8 +737,11 @@
   <header>
     <nav class="nav">
       <a class="brand" href="{% url 'home' %}">
-        <img src="{% static 'img/marella-symbol.jpg' %}" alt="">
-        <span>
+        <span class="brand-logo">
+          <img src="{% static 'img/marella-symbol.jpg' %}" alt="Logo do MARELLA">
+        </span>
+
+        <span class="brand-text">
           <span class="brand-name">MARELLA</span>
           <span class="brand-subtitle">
             Matriz de Análise de Rótulos, Elementos e Listas Alimentares
@@ -733,31 +755,31 @@
         <span></span>
       </label>
 
-<div class="nav-links">
-  <div class="nav-group primary">
-    <a class="nav-link" href="{% url 'home' %}">Início</a>
-    <a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a>
-    <a class="nav-link" href="{% url 'aditivos' %}">Componentes</a>
-    <a class="nav-link" href="{% url 'consistencias' %}">Consistências</a>
-    <a class="nav-link" href="{% url 'comparar' %}">Comparar</a>
-    <a class="nav-link" href="{% url 'simulacao' %}">Simulação de refeição</a>
-    <a class="nav-link" href="{% url 'resumo' %}">Resumo</a>
-    <a class="nav-link" href="{% url 'dashboard' %}">Painel</a>
-    <a class="nav-link" href="{% url 'trocas' %}">Trocas</a>
-    <a class="nav-link" href="{% url 'historico' %}">Histórico</a>
+      <div class="nav-links">
+        <div class="nav-group primary">
+          <a class="nav-link" href="{% url 'home' %}">Início</a>
+          <a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a>
+          <a class="nav-link" href="{% url 'aditivos' %}">Componentes</a>
+          <a class="nav-link" href="{% url 'consistencias' %}">Consistências</a>
+          <a class="nav-link" href="{% url 'comparar' %}">Comparar</a>
+          <a class="nav-link" href="{% url 'simulacao' %}">Simulação de refeição</a>
+          <a class="nav-link" href="{% url 'resumo' %}">Resumo</a>
+          <a class="nav-link" href="{% url 'dashboard' %}">Painel</a>
+          <a class="nav-link" href="{% url 'trocas' %}">Trocas</a>
+          <a class="nav-link" href="{% url 'historico' %}">Histórico</a>
 
-    {% if request.user.is_authenticated %}
-      <a class="nav-link" href="{% url 'perfil' %}">Perfil</a>
+          {% if request.user.is_authenticated %}
+            <a class="nav-link" href="{% url 'perfil' %}">Perfil</a>
 
-      <form class="logout-form" method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="nav-link logout-button">Sair</button>
-      </form>
-    {% else %}
-      <a class="nav-link" href="{% url 'login' %}">Entrar</a>
-    {% endif %}
-    </div>
-  </div>
+            <form class="logout-form" method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="nav-link logout-button">Sair</button>
+            </form>
+          {% else %}
+            <a class="nav-link" href="{% url 'login' %}">Entrar</a>
+          {% endif %}
+        </div>
+      </div>
     </nav>
   </header>
 
