@@ -11,14 +11,17 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("cadastro/", views.cadastro_usuario, name="cadastro"),
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("laudo/", views.laudo_simulacao, name="laudo"),
     path("catalogo/", views.catalogo_alimentos, name="catalogo"),
     path("aditivos/", views.painel_aditivos, name="aditivos"),
     path("consistencias/", views.consistencias, name="consistencias"),
     path("trocas/", views.sugestoes_troca, name="trocas"),
     path("historico/", views.historico_simulacoes, name="historico"),
+    path("perfil/", views.perfil, name="perfil"),
     path("comparar/", views.comparar_alimentos, name="comparar"),
     path("simulacao/", views.simulacao_refeicao, name="simulacao"),
     path("simulacao/remover/<int:item_id>/", views.remover_item, name="remover_item"),
     path("laudo/", views.laudo_simulacao, name="laudo"),
     path("relatorio/html/", views.exportar_relatorio, name="exportar_relatorio"),
 ]
+

@@ -4,13 +4,20 @@
 
 {% block content %}
   <h1>Prato virtual</h1>
-  <p class="lead">Adicione alimentos e quantidades para calcular energia, peso total, sugestões de troca e um resumo da refeição.</p>
+
+  <p class="lead">
+    Adicione alimentos e quantidades para calcular energia, peso total,
+    sugestões de troca e consultar o resumo da refeição.
+  </p>
 
   <section class="panel">
     <h2>Adicionar item</h2>
+
     <form class="inline" method="post">
       {% csrf_token %}
+
       <input type="hidden" name="acao" value="adicionar">
+
       {% for field in form %}
         <div>
           {{ field.label_tag }}
@@ -18,28 +25,63 @@
           {{ field.errors }}
         </div>
       {% endfor %}
+
       <button class="btn" type="submit">Adicionar</button>
+
       {{ form.non_field_errors }}
     </form>
   </section>
 
-  <section class="grid section-gap">
-    <div class="panel"><span class="stat">{{ simulacao.peso_total_g|floatformat:0 }}g</span> peso total</div>
-    <div class="panel"><span class="stat">{{ energia_total|floatformat:1 }}</span> kcal estimadas</div>
-    <div class="panel"><span class="stat">{{ itens|length }}</span> itens no prato</div>
+  <section class="grid summary-grid section-gap">
+    <div class="panel stat-card">
+      <span class="stat">{{ simulacao.peso_total_g|floatformat:0 }}g</span>
+      peso total
+    </div>
+
+    <div class="panel stat-card">
+      <span class="stat">{{ energia_total|floatformat:1 }}</span>
+      kcal estimadas
+    </div>
+
+    <div class="panel stat-card">
+      <span class="stat">{{ itens|length }}</span>
+      itens no prato
+    </div>
   </section>
 
   <section class="panel section-gap">
     <h2>Itens da refeição</h2>
+
     <table>
-      <thead><tr><th>Alimento</th><th>Quantidade</th><th>Energia</th><th>Tipo</th><th></th></tr></thead>
+      <thead>
+        <tr>
+          <th>Alimento</th>
+          <th>Quantidade</th>
+          <th>Energia</th>
+          <th>Tipo</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+
       <tbody>
         {% for item in itens %}
           <tr>
             <td>{{ item.alimento.nome }}</td>
-            <td>{{ item.quantidade_g|floatformat:0 }}g</td>
-            <td>{{ item.energia_calculada|floatformat:1 }} kcal</td>
-            <td><span class="badge {{ item.alimento.categoria_css }}">{{ item.alimento.perfil_alimentar }}</span></td>
+
+            <td>
+              {{ item.quantidade_g|floatformat:0 }}g
+            </td>
+
+            <td>
+              {{ item.energia_calculada|floatformat:1 }} kcal
+            </td>
+
+            <td>
+              <span class="badge {{ item.alimento.categoria_css }}">
+                {{ item.alimento.perfil_alimentar }}
+              </span>
+            </td>
+
             <td>
               <form method="post" action="{% url 'remover_item' item.id %}">
                 {% csrf_token %}
@@ -48,31 +90,39 @@
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="5">Nenhum item no prato virtual.</td></tr>
+          <tr>
+            <td colspan="5">Nenhum item no prato virtual.</td>
+          </tr>
         {% endfor %}
       </tbody>
     </table>
 
     <div class="actions">
-      <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="acao" value="gerar">
-        <button class="btn" type="submit">Gerar resumo</button>
-      </form>
+      {% if itens %}
+        <a class="btn" href="{% url 'laudo' %}">
+          Ver resumo
+        </a>
 
-      <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="acao" value="limpar">
-        <button class="btn danger" type="submit">Limpar prato</button>
-      </form>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="acao" value="limpar">
+          <button class="btn danger" type="submit">Limpar prato</button>
+        </form>
+      {% else %}
+        <span class="btn disabled">Ver resumo</span>
+        <span class="btn danger disabled">Limpar prato</span>
+      {% endif %}
 
-      <a class="btn secondary" href="{% url 'historico' %}">Histórico</a>
+      <a class="btn secondary" href="{% url 'historico' %}">
+        Histórico
+      </a>
     </div>
   </section>
 
   {% if sugestoes %}
     <section class="panel section-gap">
       <h2>Sugestões</h2>
+
       <ul>
         {% for sugestao in sugestoes %}
           <li>{{ sugestao }}</li>

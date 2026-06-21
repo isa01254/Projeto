@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Resumo - MARELLA{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+  <div>
+    <h1>Resumo da refeição</h1>
+    <p class="lead">
+      Visualize o resultado da refeição montada na simulação.
+    </p>
+  </div>
+</section>
+
+{% if itens %}
+
+<section class="grid summary-grid section-gap">
+  <div class="panel stat-card">
+    <span class="stat">{{ total_peso }}g</span>
+    peso total
+  </div>
+
+  <div class="panel stat-card">
+    <span class="stat">{{ total_kcal }}</span>
+    kcal estimadas
+  </div>
+
+  <div class="panel stat-card">
+    <span class="stat">{{ total_itens }}</span>
+    itens analisados
+  </div>
+</section>
+
+<section class="panel section-gap">
+  <h2>Itens analisados</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Alimento</th>
+        <th>Quantidade</th>
+        <th>Energia</th>
+        <th>Tipo</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for item in itens %}
+        <tr>
+          <td>{{ item.nome }}</td>
+          <td>{{ item.quantidade }} g</td>
+          <td>{{ item.kcal }} kcal</td>
+          <td>{{ item.tipo }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="panel section-gap">
+  <h2>Interpretação geral</h2>
+
+  <p>
+    Esta refeição possui um total aproximado de <strong>{{ total_kcal }} kcal</strong>
+    distribuídas em <strong>{{ total_itens }}</strong> item(ns), com peso total de
+    <strong>{{ total_peso }}g</strong>.
+  </p>
+
+  <p>
+    A análise ajuda a observar a composição geral da refeição e a comparar a presença
+    de alimentos mais naturais, processados ou industrializados.
+  </p>
+</section>
+
+<section class="panel section-gap">
+  <h2>Tipos encontrados</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Quantidade de itens</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for tipo, quantidade in tipos.items %}
+        <tr>
+          <td>{{ tipo }}</td>
+          <td>{{ quantidade }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<div class="inline-actions">
+  <a class="btn" href="{% url 'simulacao' %}">Voltar para simulação</a>
+  <a class="btn ghost" href="{% url 'trocas' %}">Ver sugestões de troca</a>
+  <a class="btn ghost" href="{% url 'historico' %}">Histórico</a>
+</div>
+
+{% else %}
+
+<section class="empty-state">
+  <h2>Nenhuma refeição montada</h2>
+
+  <p>
+    Para visualizar o resumo, primeiro adicione alimentos na simulação de refeição.
+  </p>
+
+  <div class="inline-actions" style="justify-content: center;">
+    <a class="btn" href="{% url 'simulacao' %}">Montar refeição</a>
+  </div>
+</section>
+
+{% endif %}
+
+{% endblock %}

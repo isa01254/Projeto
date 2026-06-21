@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil - MARELLA{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+  <div>
+    <h1>Meu perfil</h1>
+    <p class="lead">
+      Consulte suas informações de acesso e atalhos principais do sistema.
+    </p>
+  </div>
+</section>
+
+<section class="profile-grid section-gap">
+  <div class="panel">
+    <h2>Dados do usuário</h2>
+
+    <ul class="profile-list">
+      <li>
+        <strong>Usuário:</strong><br>
+        {{ request.user.username }}
+      </li>
+
+      <li>
+        <strong>Nome:</strong><br>
+        {% if request.user.get_full_name %}
+          {{ request.user.get_full_name }}
+        {% else %}
+          Não informado
+        {% endif %}
+      </li>
+
+      <li>
+        <strong>E-mail:</strong><br>
+        {% if request.user.email %}
+          {{ request.user.email }}
+        {% else %}
+          Não informado
+        {% endif %}
+      </li>
+
+      <li>
+        <strong>Tipo de conta:</strong><br>
+        {% if request.user.is_superuser %}
+          Administrador geral
+        {% elif request.user.is_staff %}
+          Equipe administrativa
+        {% else %}
+          Usuário comum
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>Ações rápidas</h2>
+
+    <p>
+      Use os atalhos abaixo para acessar as principais áreas do sistema.
+    </p>
+
+    <div class="actions">
+      <a class="btn" href="{% url 'simulacao' %}">Simular refeição</a>
+      <a class="btn ghost" href="{% url 'resumo' %}">Ver resumo</a>
+      <a class="btn ghost" href="{% url 'historico' %}">Histórico</a>
+      <a class="btn ghost" href="{% url 'trocas' %}">Trocas sugeridas</a>
+    </div>
+  </div>
+</section>
+
+<section class="panel section-gap">
+  <h2>Sobre o perfil</h2>
+
+  <p>
+    O perfil reúne informações básicas da conta utilizada no sistema MARELLA.
+    Ele também facilita o acesso à simulação, ao resumo da refeição, ao histórico
+    e às sugestões de troca alimentar.
+  </p>
+</section>
+
+{% endblock %}

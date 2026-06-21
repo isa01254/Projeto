@@ -8,6 +8,7 @@
     <div>
       <p class="tagline">Acesso ao sistema</p>
       <h1>Entrar na MARELLA</h1>
+
       <p class="lead">
         Entre para acessar a simulação de refeição, gerar resumos e consultar o histórico.
       </p>
@@ -20,8 +21,9 @@
       <div class="choice">
         <strong>Ainda não tenho conta</strong>
         <span>Crie uma conta para usar as áreas protegidas do sistema.</span>
+
         <div class="actions">
-          <a class="btn secondary" href="{% url 'cadastro' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">
+          <a class="btn" href="{% url 'cadastro' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">
             Criar conta
           </a>
         </div>

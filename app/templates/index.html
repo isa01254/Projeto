@@ -4,63 +4,88 @@
 {% block title %}Início - MARELLA{% endblock %}
 
 {% block content %}
+
   <section class="hero">
     <div>
       <p class="tagline">Matriz de Análise de Rótulos, Elementos e Listas Alimentares</p>
+
       <h1>Consulte, compare e simule refeições com mais clareza.</h1>
+
       <p class="lead">
-        A MARELLA organiza informações de alimentos, componentes do rótulo,
+        A Marella organiza informações de alimentos, componentes do rótulo,
         consistência e pontuação em um fluxo simples: catálogo, comparação e
         simulação de refeição.
       </p>
-      <div class="actions">
-        <a class="btn" href="{% url 'simulacao' %}">Simulação de refeição</a>
-        <a class="btn secondary" href="{% url 'catalogo' %}">Consultar catálogo</a>
-        <a class="btn ghost" href="{% url 'comparar' %}">Comparar alimentos</a>
-      </div>
-    </div>
-
-    <div class="hero-mark">
-      <img src="{% static 'img/marella-symbol.jpg' %}" alt="Símbolo MARELLA">
     </div>
   </section>
 
-  <section class="grid section-gap">
-    <div class="panel"><span class="stat">{{ total_alimentos }}</span> alimentos no catálogo</div>
-    <div class="panel"><span class="stat">{{ total_aditivos }}</span> componentes mapeados</div>
-    <div class="panel"><span class="stat">{{ total_ultraprocessados }}</span> mais industrializados</div>
-    <div class="panel"><span class="stat">{{ total_simulacoes }}</span> simulações salvas</div>
-  </section>
-
-  <section class="grid section-gap">
-    <div class="panel">
-      <h2>Catálogo</h2>
-      <p>Consulte alimentos, energia, tipo, consistência, componentes e pontuação.</p>
-      <a href="{% url 'catalogo' %}">Abrir catálogo</a>
+  <section class="grid stats-grid section-gap">
+    <div class="panel stat-card">
+      <span class="stat">{{ total_alimentos }}</span>
+      alimentos no catálogo
     </div>
 
-    <div class="panel">
-      <h2>Componentes e consistências</h2>
-      <p>Veja componentes do rótulo e informações de textura e mastigação.</p>
-      <div class="actions">
-        <a class="btn ghost" href="{% url 'aditivos' %}">Componentes</a>
-        <a class="btn ghost" href="{% url 'consistencias' %}">Consistências</a>
-      </div>
+    <div class="panel stat-card">
+      <span class="stat">{{ total_aditivos }}</span>
+      componentes mapeados
     </div>
 
-    <div class="panel">
-      <h2>Comparação</h2>
-      <p>Compare dois alimentos cadastrados e veja qual opção faz mais sentido.</p>
-      <a href="{% url 'comparar' %}">Comparar alimentos</a>
+    <div class="panel stat-card">
+      <span class="stat">{{ total_ultraprocessados }}</span>
+      mais industrializados
     </div>
 
-    <div class="panel">
-      <h2>Simulação de refeição</h2>
-      <p>Monte um prato virtual, gere resumo, veja histórico e sugestões de troca.</p>
-      <div class="actions">
-        <a class="btn ghost" href="{% url 'simulacao' %}">Simular</a>
-        <a class="btn ghost" href="{% url 'trocas' %}">Trocas</a>
-      </div>
+    <div class="panel stat-card">
+      <span class="stat">{{ total_simulacoes }}</span>
+      simulações salvas
     </div>
   </section>
+
+  <section class="grid text-grid section-gap">
+    <div class="panel text-card">
+      <h2>Qualidade nutricional</h2>
+      <p>
+        A qualidade nutricional de um alimento depende de sua composição química,
+        dos processos tecnológicos e culinários pelos quais passa e da
+        biodisponibilidade dos nutrientes. Sua função é fornecer energia e
+        nutrientes ao corpo, ajudando na formação e manutenção dos tecidos e na
+        regulação do funcionamento dos órgãos.
+      </p>
+    </div>
+
+    <div class="panel text-card">
+      <h2>Alimentação equilibrada</h2>
+      <p>
+        Uma alimentação equilibrada fornece os nutrientes necessários para manter
+        o bom funcionamento do organismo, a saúde e o bem-estar. Os principais
+        nutrientes são proteínas, carboidratos, vitaminas, minerais, gorduras,
+        fibras e água. Embora os alimentos sejam formados quimicamente por
+        elementos como carbono, hidrogênio, oxigênio e nitrogênio, seu valor
+        nutritivo está relacionado aos nutrientes que eles oferecem ao corpo.
+      </p>
+    </div>
+
+    <div class="panel text-card">
+      <h2>Carências nutricionais</h2>
+      <p>
+        As pessoas que têm uma alimentação deficiente e que não consomem as
+        quantidades adequadas de alimentos ricos em energia e nutrientes adoecem
+        com frequência e podem apresentar carências nutricionais. O tipo de má
+        nutrição dependerá da quantidade de energia e nutrientes em falta ou em
+        excesso, do período de tempo, da idade e da condição física da pessoa.
+      </p>
+    </div>
+
+    <div class="panel text-card">
+      <h2>Consumo excessivo</h2>
+      <p>
+        Atualmente, há maior consumo de alimentos desnecessários à manutenção da
+        saúde, especialmente aqueles ricos em energia, gordura, açúcar e excesso
+        de sal. O consumo excessivo de energia pode resultar em sobrepeso ou
+        obesidade, aumentando o risco de enfermidades crônicas, como doenças do
+        coração, hipertensão e diabetes.
+      </p>
+    </div>
+  </section>
+
 {% endblock %}
